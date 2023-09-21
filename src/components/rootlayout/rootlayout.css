@@ -1,0 +1,127 @@
+.navcontainer {
+    width: 1440px;
+    height: 80px;
+    margin: 0 auto;
+    font-family: 'Inter', sans-serif;
+}
+
+.navbarbox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+    padding: 0 20px;
+    -webkit-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
+    -moz-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
+    box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
+}
+
+.navcontainer .navbar h3 {
+    margin-top: 50px;
+    font-size: 30px;
+}
+
+
+.navcontainer .navbar ul li {
+    margin: 20px 50px;
+}
+
+.navcontainer .navbarbox .navright>img {
+    height: 38px;
+    width: 38px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+.navcontainer .navbarbox .navright img:hover {
+    cursor: pointer;
+    -webkit-box-shadow: 0px 0px 15px -5px rgba(0, 0, 0, 1);
+    -moz-box-shadow: 0px 0px 15px -5px rgba(0, 0, 0, 1);
+    box-shadow: 0px 0px 15px -5px rgba(0, 0, 0, 1);
+}
+
+.navcontainer .icon {
+    justify-content: center;
+    padding: 5px;
+    text-decoration: none;
+    border: 1px solid rgb(255, 255, 255);
+    color: #1E1E1E;
+    border-radius: 5px;
+
+}
+
+.navcontainer .navright {
+    position: relative;
+}
+
+.navcontainer .navbar {
+    position: absolute;
+    top: 70px;
+    right: 0;
+    border-radius: 10px;
+    -webkit-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
+    -moz-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
+    box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
+}
+
+.navcontainer .navbar .active {
+    justify-content: center;
+    padding: 5px;
+    text-decoration: none;
+    border: 1px solid #32375C;
+    color: #ffffff;
+    border-radius: 5px;
+    background: #32375C;
+}
+
+.navcontainer .navbar .user {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    width: 200px;
+}
+
+.navcontainer .navbar .user .left {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.navcontainer .navbar .user .left img {
+    height: 38px;
+    width: 38px;
+    border-radius: 50%;
+}
+
+.navcontainer .navbar .user .right {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.navcontainer .navbar .user .right .settings,
+.navcontainer .navbar .user .right .logout {
+    height: 20px;
+    width: 20px;
+    background: #ffffff;
+    border: 1px solid white;
+    border-radius: 50%;
+    transition: all linear 0.4s;
+}
+
+.navcontainer .navbar .user .right .settings:hover {
+    background: #32375C;
+    border: 1px solid #32375C;
+    border-radius: 50%;
+    color: #ffffff;
+    cursor: pointer;
+}
+
+
+.navcontainer .navbar .user .right .logout:hover {
+    background: #32375C;
+    border: 1px solid #32375C;
+    border-radius: 50%;
+    color: #ffffff;
+    cursor: pointer;
+}
