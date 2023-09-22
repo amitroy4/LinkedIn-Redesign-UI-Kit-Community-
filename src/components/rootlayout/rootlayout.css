@@ -1,7 +1,5 @@
 .navcontainer {
-    width: 1440px;
-    height: 80px;
-    margin: 0 auto;
+    width: 100%;
     font-family: 'Inter', sans-serif;
 }
 
@@ -10,10 +8,16 @@
     justify-content: space-between;
     align-items: center;
     height: 100%;
-    padding: 0 20px;
+    padding: 0 60px;
     -webkit-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
     -moz-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
     box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
+}
+
+.navbarbox .navleft img {
+    max-height: 38px;
+    max-width: 38px;
+    margin: 5px 0;
 }
 
 .navcontainer .navbar h3 {
@@ -27,8 +31,8 @@
 }
 
 .navcontainer .navbarbox .navright>img {
-    height: 38px;
-    width: 38px;
+    max-height: 38px;
+    max-width: 38px;
     border-radius: 50%;
     border: 2px solid white;
 }
@@ -55,6 +59,7 @@
 }
 
 .navcontainer .navbar {
+    background: rgba(255, 255, 255, 0.9);
     position: absolute;
     top: 70px;
     right: 0;
@@ -62,6 +67,7 @@
     -webkit-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
     -moz-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
     box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
+    z-index: 100;
 }
 
 .navcontainer .navbar .active {

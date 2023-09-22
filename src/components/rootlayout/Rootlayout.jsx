@@ -98,9 +98,7 @@ const Rootlayout = () => {
                         </div>
                     </div>
                 </div>
-                <Grid item xs={10.5}>
-                    <Outlet />
-                </Grid>
+                <Outlet />
             </Grid>
         </>
     )
