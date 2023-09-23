@@ -7,11 +7,17 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 100%;
-    padding: 0 60px;
+    width: 100%;
     -webkit-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
     -moz-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
     box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
+    position: fixed;
+    z-index: 2000;
+    background: white;
+}
+
+.navbarbox .navleft {
+    margin-left: 5%;
 }
 
 .navbarbox .navleft img {
@@ -56,6 +62,7 @@
 
 .navcontainer .navright {
     position: relative;
+    margin-right: 15%;
 }
 
 .navcontainer .navbar {

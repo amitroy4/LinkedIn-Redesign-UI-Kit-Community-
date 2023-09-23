@@ -1,15 +1,30 @@
 .container {
     width: 850px;
     margin: 0 auto;
+    font-family: 'Barlow', sans-serif;
 }
 
-.profile {
-    margin-top: 34px;
+.container>.profile {
+    margin-top: 84px;
     -webkit-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
     -moz-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
     box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
+}
+
+.profile .profileinfo .propic {
+    position: relative;
+}
+
+.profile .profileinfo .propic>img {
+    position: absolute;
+    height: 170px;
+    width: 170px;
+    border-radius: 50%;
+    bottom: 25px;
+    left: 25px;
+    border: 10px solid white;
 }
 
 .coverphoto {
@@ -20,8 +35,12 @@
 
 .coverphoto .editbtn {
     position: absolute;
-    top:20px;
+    top: 20px;
     right: 57px;
+}
+
+.coverphoto .editbtn .edittext {
+    padding-left: 10px;
 }
 
 .coverphoto img {
@@ -51,6 +70,28 @@
     justify-content: space-between;
 }
 
+.profileinfo .info .nameloc>h2 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #181818;
+}
+
+.profileinfo .info .nameloc>h2 .nameicon {
+    padding-left: 28px;
+    color: #D8C281;
+    font-size: 16px;
+}
+
+.profileinfo .info .nameloc .loc .locicon {
+    color: #0275B1;
+}
+
+.profileinfo .info .nameloc .loc .locedit {
+    padding-left: 10px;
+    font-size: 12px;
+    font-weight: 400;
+}
+
 .profileinfo .info .nameloc h2 {
     width: 40%;
 }
@@ -63,4 +104,55 @@
     width: 583px;
     margin-top: 10px;
     margin-bottom: 14px;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+
+.container .section {
+    display: flex;
+    width: 100%;
+    text-align: center;
+    margin-top: 21px;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.container .section .profile {
+    width: 33.3333%;
+    padding-top: 11px;
+    padding-bottom: 15px;
+    border: 1px solid #E7E7E7;
+    border-top-left-radius: 10px;
+    text-decoration: none;
+    color: #181818;
+    text-transform: uppercase;
+}
+
+.container .section .friends {
+    width: 33.3333%;
+    padding-top: 11px;
+    padding-bottom: 15px;
+    border: 1px solid #E7E7E7;
+    border-left: none;
+    border-right: none;
+    text-decoration: none;
+    color: #181818;
+    text-transform: uppercase;
+}
+
+.container .section .post {
+    width: 33.3333%;
+    padding-top: 11px;
+    padding-bottom: 15px;
+    border: 1px solid #E7E7E7;
+    border-top-right-radius: 10px;
+    text-decoration: none;
+    color: #181818;
+    text-transform: uppercase;
+}
+
+.container .section .active {
+    background: #0077B5;
+    color: white;
 }

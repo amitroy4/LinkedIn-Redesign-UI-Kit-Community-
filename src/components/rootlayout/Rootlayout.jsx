@@ -72,6 +72,11 @@ const Rootlayout = () => {
                                             </Link>
                                         </li>
                                         <li >
+                                            <Link to='/LinkedIn/friends' className={location.pathname == "/LinkedIn/firends" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
+                                                <AiOutlineUser /> Friends
+                                            </Link>
+                                        </li>
+                                        <li >
                                             <Link to='/LinkedIn/chat' className={location.pathname == "/LinkedIn/chat" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
                                                 <BsFillChatFill /> Chat
                                             </Link>
@@ -79,11 +84,6 @@ const Rootlayout = () => {
                                         <li >
                                             <Link to='/LinkedIn/chat' className={location.pathname == "/LinkedIn/group" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
                                                 <HiUserGroup /> Group
-                                            </Link>
-                                        </li>
-                                        <li >
-                                            <Link to='/LinkedIn/chat' className={location.pathname == "/LinkedIn/firends" ? 'active' : 'icon'}>
-                                                <AiOutlineUser /> Friends
                                             </Link>
                                         </li>
                                         <li >
@@ -98,8 +98,8 @@ const Rootlayout = () => {
                         </div>
                     </div>
                 </div>
-                <Outlet />
             </Grid>
+            <Outlet />
         </>
     )
 }

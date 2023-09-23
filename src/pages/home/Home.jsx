@@ -4,8 +4,12 @@ import People from '../../components/people/People';
 import Friendrequests from '../../components/friendrequests/Friendrequests';
 import Friends from '../../components/friends/Friends';
 import Blocklist from '../../components/blocklist/Blocklist';
+import { Link, Outlet, useLocation } from 'react-router-dom'
 import Button from '@mui/material/Button';
 import './home.css'
+import { FiEdit } from 'react-icons/fi';
+import { FaLocationArrow } from 'react-icons/fa';
+import { BiLogoLinkedinSquare } from 'react-icons/bi';
 
 
 const Home = () => {
@@ -15,15 +19,18 @@ const Home = () => {
                 <div className="coverphoto">
                     <img src="/cover.png" alt="" />
                     <Button className='editbtn' variant="outlined" size="small">
-                        Edit Profile
+                        <FiEdit />
+                        <span className='edittext'>Edit Profile</span>
                     </Button>
                 </div>
                 <div className="profileinfo">
-                    <div className="propic">zcz</div>
+                    <div className="propic">
+                        <img src="/propic.jpeg" alt="" />
+                    </div>
                     <div className="info">
                         <div className="nameloc">
-                            <h2>Dmitry Kargaev</h2>
-                            <div className="loc">Saint Petersburg, Russian Federation</div>
+                            <h2>Dmitry Kargaev <BiLogoLinkedinSquare className='nameicon' /></h2>
+                            <div className="loc"> <FaLocationArrow className='locicon' /> <span className='locedit'>Saint Petersburg, Russian Federation</span></div>
                         </div>
                         <div className="details">
                             Freelance UX/UI designer, 80+ projects in web design, mobile apps  (iOS & android) and creative projects. Open to offers.
@@ -33,6 +40,11 @@ const Home = () => {
                         </Button>
                     </div>
                 </div>
+            </div>
+            <div className="section">
+                <Link to='/LinkedIn/home' className={location.pathname == "/LinkedIn/home" ? "profile active" : "profile"}>Profile</Link>
+                <Link to='/LinkedIn/friends' className={location.pathname == "/LinkedIn/friends" ? "friends active" : "friends"}>Friends</Link>
+                <Link className="post" >Post</Link>
             </div>
         </div>
     )

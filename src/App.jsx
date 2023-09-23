@@ -13,7 +13,7 @@ import Login from './pages/login/Login';
 import firebaseConfig from './firebaseConfig';
 import Home from './pages/home/Home';
 import Rootlayout from './components/rootlayout/Rootlayout';
-import Chat from './pages/chat/Chat';
+import People from './pages/people/People';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -22,7 +22,7 @@ const router = createBrowserRouter(
       <Route path="/login" element={<Login />}></Route>
       <Route path="/LinkedIn" element={<Rootlayout />}>
         <Route path="home" element={<Home />}></Route>
-        <Route path="chat" element={<Chat />}></Route>
+        <Route path="friends" element={<People />}></Route>
       </Route>
     </Route>
   )
