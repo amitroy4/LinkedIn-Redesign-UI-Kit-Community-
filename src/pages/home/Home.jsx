@@ -46,6 +46,23 @@ const Home = () => {
                 <Link to='/LinkedIn/friends' className={location.pathname == "/LinkedIn/friends" ? "friends active" : "friends"}>Friends</Link>
                 <Link className="post" >Post</Link>
             </div>
+            <div className="about">
+                <h4>About</h4>
+                <p>I'm more experienced in eCommerce web projects and mobile banking apps, but also like to work with creative projects, such as landing pages or unusual corporate websites. </p>
+                <Button size="small">
+                    SEE MORE
+                </Button>
+
+            </div>
+            <div className="projects">
+                <h4>Projects <span className='projectcount'>3 of 12</span></h4>
+                <div className="pic">
+                    <img src="/ext.png" alt="" />
+                    <img src="/ext.png" alt="" />
+                    <img src="/ext.png" alt="" />
+                </div>
+
+            </div>
         </div>
     )
 }

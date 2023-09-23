@@ -72,7 +72,7 @@ const Rootlayout = () => {
                                             </Link>
                                         </li>
                                         <li >
-                                            <Link to='/LinkedIn/friends' className={location.pathname == "/LinkedIn/firends" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
+                                            <Link to='/LinkedIn/friends' className={location.pathname == "/LinkedIn/friends" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
                                                 <AiOutlineUser /> Friends
                                             </Link>
                                         </li>
