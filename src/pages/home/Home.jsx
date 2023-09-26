@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Grid from '@mui/material/Grid';
 import People from '../../components/people/People';
 import Friendrequests from '../../components/friendrequests/Friendrequests';
@@ -11,10 +11,39 @@ import { FiEdit } from 'react-icons/fi';
 import { FaLocationArrow } from 'react-icons/fa';
 import { BiLogoLinkedinSquare } from 'react-icons/bi';
 import { useSelector } from 'react-redux';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import TextField from '@mui/material/TextField';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import dayjs from 'dayjs'
 
+import { MuiTelInput } from 'mui-tel-input'
+
+
+const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 700,
+    bgcolor: 'background.paper',
+    p: 4,
+};
 
 const Home = () => {
     let userData = useSelector((state) => state.loginUser.loginUser)
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const [value, setValue] = useState(dayjs('2022-04-17'));
+    const [tel, setTel] = useState('')
+
+    const handleTel = (newValue) => {
+        setTel(newValue)
+    }
     return (
         <div className="container">
             <div className="profile">
@@ -22,7 +51,52 @@ const Home = () => {
                     <img src="/cover.png" alt="" />
                     <Button className='editbtn' variant="outlined" size="small">
                         <FiEdit />
-                        <span className='edittext'>Edit Profile</span>
+                        <span className='edittext' onClick={handleOpen}>Edit Profile</span>
+                        <Modal
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box sx={style}>
+                                <Typography id="modal-modal-title" variant="h6" component="h2">
+                                    Edit Profile
+                                </Typography>
+                                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                    <TextField id="outlined-basic" label="Name" variant="outlined" sx={{ width: 250 }} />
+                                    <TextField id="outlined-basic" label="Address" variant="outlined" sx={{ ml: 5, width: 350 }} />
+                                </Typography>
+                                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                        <DatePicker
+                                            label="Date of Birth"
+                                            value={value}
+                                            onChange={(newValue) => setValue(newValue)}
+                                            sx={{ width: 250 }}
+                                        />
+                                    </LocalizationProvider>
+
+                                    <TextField id="outlined-basic" label="Info" variant="outlined" sx={{ ml: 5, width: 350 }} />
+                                </Typography>
+                                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                    <MuiTelInput value={tel} onChange={handleTel} label="Phone Number" variant="outlined" sx={{ width: 300 }} />
+                                    <TextField id="outlined-basic" label="Email" variant="outlined" sx={{ ml: 5, width: 300 }} />
+                                </Typography>
+                                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                    <TextField
+                                        id="outlined-multiline-flexible"
+                                        label="About"
+                                        multiline
+                                        maxRows={6}
+                                        sx={{ width: 640 }}
+                                    />
+                                </Typography>
+                                <Button variant="contained" href="#contained-buttons" size="small" sx={{ mt: 2 }}>
+                                    Save
+                                </Button>
+
+                            </Box>
+                        </Modal>
                     </Button>
                 </div>
                 <div className="profileinfo">
