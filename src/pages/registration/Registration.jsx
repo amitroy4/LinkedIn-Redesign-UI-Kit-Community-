@@ -60,7 +60,12 @@ const Registration = () => {
                         set(ref(db, 'people/' + user.user.uid), {
                             username: userInfo.fullname,
                             email: userInfo.email,
-                            profile_picture: user.user.photoURL
+                            profile_picture: user.user.photoURL,
+                            dateofbirth: '',
+                            phonenumber: '',
+                            address: '',
+                            info: '',
+                            about: '',
                         });
                         setUserInfo({
                             email: '',

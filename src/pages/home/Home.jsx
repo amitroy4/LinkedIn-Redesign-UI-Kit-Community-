@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Grid from '@mui/material/Grid';
 import People from '../../components/people/People';
 import Friendrequests from '../../components/friendrequests/Friendrequests';
@@ -22,6 +22,8 @@ import dayjs from 'dayjs'
 
 import { MuiTelInput } from 'mui-tel-input'
 
+import { getDatabase, ref, onValue } from "firebase/database";
+
 
 const style = {
     position: 'absolute',
@@ -34,16 +36,26 @@ const style = {
 };
 
 const Home = () => {
+    const db = getDatabase();
     let userData = useSelector((state) => state.loginUser.loginUser)
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [value, setValue] = useState(dayjs('2022-04-17'));
     const [tel, setTel] = useState('')
+    const [currentUser, setCurrentUser] = useState([]);
+    let [username, setusername] = useState("")
 
     const handleTel = (newValue) => {
         setTel(newValue)
     }
+
+    useEffect(() => {
+        onValue(ref(db, 'people/' + userData.uid), (snapshot) => {
+            setCurrentUser(snapshot.val())
+        });
+    }, [])
+
+
     return (
         <div className="container">
             <div className="profile">
@@ -63,24 +75,26 @@ const Home = () => {
                                     Edit Profile
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    <TextField id="outlined-basic" label="Name" variant="outlined" sx={{ width: 250 }} />
-                                    <TextField id="outlined-basic" label="Address" variant="outlined" sx={{ ml: 5, width: 350 }} />
+                                    <TextField id="outlined-controlled" label="Name" variant="outlined" sx={{ width: 250 }} value={currentUser.username} onChange={(event) => {
+                                        setusername(event.target.value);
+                                    }} />
+                                    <TextField id="outlined-basic" label="Address" variant="outlined" sx={{ ml: 5, width: 350 }} value={currentUser.address} />
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <DatePicker
                                             label="Date of Birth"
-                                            value={value}
-                                            onChange={(newValue) => setValue(newValue)}
+                                            value={dayjs('1950-01-01')}
+                                            onChange={() => setValue(newValue)}
                                             sx={{ width: 250 }}
                                         />
                                     </LocalizationProvider>
 
-                                    <TextField id="outlined-basic" label="Info" variant="outlined" sx={{ ml: 5, width: 350 }} />
+                                    <TextField id="outlined-basic" label="Info" variant="outlined" sx={{ ml: 5, width: 350 }} value={currentUser.info} />
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    <MuiTelInput value={tel} onChange={handleTel} label="Phone Number" variant="outlined" sx={{ width: 300 }} />
-                                    <TextField id="outlined-basic" label="Email" variant="outlined" sx={{ ml: 5, width: 300 }} />
+                                    <MuiTelInput value={tel} onChange={handleTel} label="Phone Number" variant="outlined" sx={{ width: 300 }} value={currentUser.phonenumber} />
+                                    <TextField id="outlined-basic" label="Email" variant="outlined" sx={{ ml: 5, width: 300 }} value={currentUser.email} />
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                     <TextField
@@ -89,6 +103,7 @@ const Home = () => {
                                         multiline
                                         maxRows={6}
                                         sx={{ width: 640 }}
+                                        value={currentUser.about}
                                     />
                                 </Typography>
                                 <Button variant="contained" href="#contained-buttons" size="small" sx={{ mt: 2 }}>
@@ -106,10 +121,10 @@ const Home = () => {
                     <div className="info">
                         <div className="nameloc">
                             <h2>{userData.displayName}<BiLogoLinkedinSquare className='nameicon' /></h2>
-                            <div className="loc"> <FaLocationArrow className='locicon' /> <span className='locedit'>Saint Petersburg, Russian Federation</span></div>
+                            <div className="loc"> <FaLocationArrow className='locicon' /> <span className='locedit'>{currentUser.address}</span></div>
                         </div>
                         <div className="details">
-                            Freelance UX/UI designer, 80+ projects in web design, mobile apps  (iOS & android) and creative projects. Open to offers.
+                            {currentUser.info}
                         </div>
                         <Button size="small" variant="contained" href="#contained-buttons">
                             Contact info
@@ -124,7 +139,7 @@ const Home = () => {
             </div>
             <div className="about">
                 <h4>About</h4>
-                <p>I'm more experienced in eCommerce web projects and mobile banking apps, but also like to work with creative projects, such as landing pages or unusual corporate websites. </p>
+                <p>{currentUser.about}</p>
                 <Button size="small">
                     SEE MORE
                 </Button>
