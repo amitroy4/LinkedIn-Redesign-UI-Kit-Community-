@@ -61,6 +61,7 @@ const Home = () => {
     };
 
 
+
     let handleeditbuttonsave = () => {
         set(ref(db, 'people/' + userData.uid), {
             ...currentUser,
@@ -89,6 +90,10 @@ const Home = () => {
         setdateofbirth(year + "-" + ("0" + (month)) + "-" + newDate.getDate());
     }
 
+    const handlePhoneChange = (newValue) => {
+        setphonenumber(newValue)
+        console.log(phonenumber);
+    }
 
     return (
         <div className="container">
@@ -116,7 +121,7 @@ const Home = () => {
                                     <TextField id="outlined-basic" label="Address" variant="outlined" sx={{ ml: 5, width: 350 }} value={address} onChange={(e) => { setaddress(e.target.value) }} />
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    <MuiTelInput label="Phone Number" variant="outlined" sx={{ width: 300 }} value={phonenumber} onChange={(e) => setphonenumber(e.target.value)} />
+                                    <MuiTelInput label="Phone Number" variant="outlined" sx={{ width: 300 }} value={phonenumber} onChange={handlePhoneChange} />
                                     <LocalizationProvider dateAdapter={AdapterDayjs} >
                                         <DatePicker
                                             label="Date of Birth"
