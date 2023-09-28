@@ -15,6 +15,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import TextField from '@mui/material/TextField';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
@@ -22,7 +23,7 @@ import dayjs from 'dayjs'
 
 import { MuiTelInput } from 'mui-tel-input'
 
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, set } from "firebase/database";
 
 
 const style = {
@@ -39,14 +40,40 @@ const Home = () => {
     const db = getDatabase();
     let userData = useSelector((state) => state.loginUser.loginUser)
     const [open, setOpen] = useState(false);
-    const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
-    const [tel, setTel] = useState('')
     const [currentUser, setCurrentUser] = useState([]);
-    let [username, setusername] = useState("")
+    let [username, setusername] = useState('');
+    let [address, setaddress] = useState('');
+    let [dateofbirth, setdateofbirth] = useState('');
+    let [info, setinfo] = useState('');
+    let [phonenumber, setphonenumber] = useState('');
+    let [email, setemail] = useState('');
+    let [about, setabout] = useState('');
 
-    const handleTel = (newValue) => {
-        setTel(newValue)
+    const handleOpen = () => {
+        setusername(currentUser.username);
+        setaddress(currentUser.address);
+        setdateofbirth(currentUser.dateofbirth);
+        setinfo(currentUser.info);
+        setphonenumber(currentUser.phonenumber);
+        setemail(currentUser.email);
+        setabout(currentUser.about);
+        setOpen(true)
+    };
+
+
+    let handleeditbuttonsave = () => {
+        set(ref(db, 'people/' + userData.uid), {
+            ...currentUser,
+            username: username,
+            email: email,
+            dateofbirth: dateofbirth,
+            phonenumber: phonenumber,
+            address: address,
+            info: info,
+            about: about,
+        });
+        setOpen(false)
     }
 
     useEffect(() => {
@@ -54,6 +81,14 @@ const Home = () => {
             setCurrentUser(snapshot.val())
         });
     }, [])
+
+    let handleinput = (e) => {
+        var newDate = new Date(e.toJSON());
+        var day = newDate.getDate();
+        var month = newDate.getUTCMonth() + 1;
+        var year = newDate.getFullYear();
+        setdateofbirth(year + "-" + ("0" + (month)) + "-" + newDate.getDate());
+    }
 
 
     return (
@@ -70,31 +105,32 @@ const Home = () => {
                             aria-labelledby="modal-modal-title"
                             aria-describedby="modal-modal-description"
                         >
-                            <Box sx={style}>
+                            <Box sx={style} component="form"
+
+                                noValidate
+                                autoComplete="off">
                                 <Typography id="modal-modal-title" variant="h6" component="h2">
                                     Edit Profile
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    <TextField id="outlined-controlled" label="Name" variant="outlined" sx={{ width: 250 }} value={currentUser.username} onChange={(event) => {
-                                        setusername(event.target.value);
-                                    }} />
-                                    <TextField id="outlined-basic" label="Address" variant="outlined" sx={{ ml: 5, width: 350 }} value={currentUser.address} />
+                                    <TextField id="outlined-controlled" label="Name" sx={{ width: 250 }} value={username} onChange={(e) => { setusername(e.target.value); }} />
+                                    <TextField id="outlined-basic" label="Address" variant="outlined" sx={{ ml: 5, width: 350 }} value={address} onChange={(e) => { setaddress(e.target.value) }} />
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                                         <DatePicker
                                             label="Date of Birth"
-                                            value={dayjs('1950-01-01')}
-                                            onChange={() => setValue(newValue)}
+                                            value={dayjs(dateofbirth)}
+                                            onChange={handleinput}
                                             sx={{ width: 250 }}
                                         />
                                     </LocalizationProvider>
 
-                                    <TextField id="outlined-basic" label="Info" variant="outlined" sx={{ ml: 5, width: 350 }} value={currentUser.info} />
+                                    <TextField id="outlined-basic" label="Info" variant="outlined" sx={{ ml: 5, width: 350 }} value={info} onChange={(e) => setinfo(e.target.value)} />
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    <MuiTelInput value={tel} onChange={handleTel} label="Phone Number" variant="outlined" sx={{ width: 300 }} value={currentUser.phonenumber} />
-                                    <TextField id="outlined-basic" label="Email" variant="outlined" sx={{ ml: 5, width: 300 }} value={currentUser.email} />
+                                    <MuiTelInput label="Phone Number" variant="outlined" sx={{ width: 300 }} value={phonenumber} onChange={(e) => setphonenumber(e.target.value)} />
+                                    <TextField id="outlined-basic" label="Email" variant="outlined" sx={{ ml: 5, width: 300 }} value={email} onChange={(e) => setemail(e.target.value)} />
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                     <TextField
@@ -103,10 +139,11 @@ const Home = () => {
                                         multiline
                                         maxRows={6}
                                         sx={{ width: 640 }}
+                                        onChange={(e) => setabout(e.target.value)}
                                         value={currentUser.about}
                                     />
                                 </Typography>
-                                <Button variant="contained" href="#contained-buttons" size="small" sx={{ mt: 2 }}>
+                                <Button variant="contained" href="#contained-buttons" size="small" sx={{ mt: 2 }} onClick={handleeditbuttonsave}>
                                     Save
                                 </Button>
 
