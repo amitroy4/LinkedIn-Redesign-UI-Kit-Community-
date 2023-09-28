@@ -117,20 +117,23 @@ const Home = () => {
                                     <TextField id="outlined-basic" label="Address" variant="outlined" sx={{ ml: 5, width: 350 }} value={address} onChange={(e) => { setaddress(e.target.value) }} />
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                    <MuiTelInput label="Phone Number" variant="outlined" sx={{ width: 300 }} value={phonenumber} onChange={(e) => setphonenumber(e.target.value)} />
+                                    <LocalizationProvider dateAdapter={AdapterDayjs} >
                                         <DatePicker
                                             label="Date of Birth"
                                             value={dayjs(dateofbirth)}
                                             onChange={handleinput}
-                                            sx={{ width: 250 }}
+                                            sx={{ ml: 5, width: 300 }}
                                         />
                                     </LocalizationProvider>
-
-                                    <TextField id="outlined-basic" label="Info" variant="outlined" sx={{ ml: 5, width: 350 }} value={info} onChange={(e) => setinfo(e.target.value)} />
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    <MuiTelInput label="Phone Number" variant="outlined" sx={{ width: 300 }} value={phonenumber} onChange={(e) => setphonenumber(e.target.value)} />
-                                    <TextField id="outlined-basic" label="Email" variant="outlined" sx={{ ml: 5, width: 300 }} value={email} onChange={(e) => setemail(e.target.value)} />
+
+                                    <TextField id="outlined-basic" label="Email" variant="outlined" sx={{ width: 300 }} value={email} onChange={(e) => setemail(e.target.value)} />
+                                </Typography>
+                                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                    <TextField id="outlined-multiline-flexible" label="Info" variant="outlined" multiline
+                                        maxRows={6} sx={{ width: 640 }} value={info} onChange={(e) => setinfo(e.target.value)} />
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                                     <TextField
@@ -140,7 +143,7 @@ const Home = () => {
                                         maxRows={6}
                                         sx={{ width: 640 }}
                                         onChange={(e) => setabout(e.target.value)}
-                                        value={currentUser.about}
+                                        value={about}
                                     />
                                 </Typography>
                                 <Button variant="contained" href="#contained-buttons" size="small" sx={{ mt: 2 }} onClick={handleeditbuttonsave}>
