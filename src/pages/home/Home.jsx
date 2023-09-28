@@ -19,13 +19,34 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs'
-
 import { MuiTelInput } from 'mui-tel-input'
-
-import { getDatabase, ref, onValue, set } from "firebase/database";
+import { getDatabase, ref, onValue, set, push, remove } from "firebase/database";
+import { BiSolidEdit } from "react-icons/bi";
+import { MdDelete } from "react-icons/md";
+import { differenceInDays } from 'date-fns'
 
 
 const style = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 700,
+    bgcolor: 'background.paper',
+    p: 4,
+};
+
+const styleAdd = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 700,
+    bgcolor: 'background.paper',
+    p: 4,
+};
+
+const styleEdit = {
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -48,6 +69,23 @@ const Home = () => {
     let [phonenumber, setphonenumber] = useState('');
     let [email, setemail] = useState('');
     let [about, setabout] = useState('');
+
+
+    const [openAdd, setopenAdd] = useState(false);
+    const handleopenAdd = () => setopenAdd(true);
+    const handleCloseAdd = () => setopenAdd(false);
+    let [exp, setExp] = useState([]);
+    let [expDesignation, setExpDesignation] = useState('');
+    let [expCompany, setExpCompany] = useState('');
+    let [expCompanyType, setExpCompanyType] = useState('');
+    let [expCompanyJoinDate, setExpCompanyJoinDate] = useState('');
+    let [expCompanyEndDate, setExpCompanyEndDate] = useState('');
+    let [expDetails, setExpDetails] = useState('');
+
+
+    const [openEdit, setOpenEdit] = useState(false);
+    const handleOpenEdit = () => setOpenEdit(true);
+    const handleCloseEdit = () => setOpenEdit(false);
 
     const handleOpen = () => {
         setusername(currentUser.username);
@@ -72,8 +110,16 @@ const Home = () => {
             address: address,
             info: info,
             about: about,
+        }).then(() => {
+            setusername('');
+            setaddress('');
+            setdateofbirth('');
+            setinfo('');
+            setphonenumber('');
+            setemail('');
+            setabout('');
+            setOpen(false)
         });
-        setOpen(false)
     }
 
     useEffect(() => {
@@ -92,8 +138,66 @@ const Home = () => {
 
     const handlePhoneChange = (newValue) => {
         setphonenumber(newValue)
-        console.log(phonenumber);
+        console.log(phonenumber)
     }
+
+
+    let handleExpAdd = () => {
+        set(push(ref(db, 'experiance/')), {
+            userid: userData.uid,
+            expDesignation: expDesignation,
+            expCompany: expCompany,
+            expCompanyType: expCompanyType,
+            expCompanyJoinDate: expCompanyJoinDate,
+            expCompanyEndDate: expCompanyEndDate,
+            expDetails: expDetails,
+        }).then(() => {
+            setExpDesignation('');
+            setExpCompany('');
+            setExpCompanyType('');
+            setExpCompanyJoinDate('');
+            setExpCompanyEndDate('');
+            setExpDetails('');
+            setopenAdd(false)
+        });;
+    }
+
+    let handleinputexpCompanyJoinDate = (e) => {
+        var newDate = new Date(e.toJSON());
+        var day = newDate.getDate();
+        var month = newDate.getUTCMonth() + 1;
+        var year = newDate.getFullYear();
+        setExpCompanyJoinDate(year + "-" + ("0" + (month)) + "-" + newDate.getDate());
+    }
+
+    let handleinputexpCompanyEndDate = (e) => {
+        var newDate = new Date(e.toJSON());
+        var day = newDate.getDate();
+        var month = newDate.getUTCMonth() + 1;
+        var year = newDate.getFullYear();
+        setExpCompanyEndDate(year + "-" + ("0" + (month)) + "-" + newDate.getDate());
+    }
+
+    let handleexpremove = (item) => {
+        remove(ref(db, 'experiance/' + item.id));
+    }
+
+
+    useEffect(() => {
+        onValue(ref(db, 'experiance/'), (snapshot) => {
+            let arr = []
+            snapshot.forEach(item => {
+                if (userData.uid == item.val().userid) {
+                    arr.push({
+                        ...item.val(),
+                        id: item.key,
+                    })
+                }
+            })
+            setExp(arr)
+        });
+        console.log(exp);
+    }, [])
 
     return (
         <div className="container">
@@ -198,49 +302,36 @@ const Home = () => {
                 </div>
             </div>
             <div className="experiance">
-                <h4>Experiance</h4>
-                <div className="expfield">
-                    <div className="explogo">
-                        <img src="/ext.png" alt="" />
-                    </div>
-                    <div className="expinfo">
-                        <div className="exptitle">
-                            Freelance UX/UI designer
-                        </div>
-                        <div className="expbox">
-                            <div className="left">Self Employed</div>
-                            <div className="right">Around the world</div>
-                        </div>
-                        <div className="expbox">
-                            <div className="left">Jun 2016 — Present</div>
-                            <div className="right rightcolor">3 yrs 3 mos</div>
-                        </div>
-                        <div className="expdetails">
-                            Work with clients and web studios as freelancer.  Work in next areas: eCommerce web projects; creative landing pages; iOs and Android apps; corporate web sites and corporate identity sometimes.
-                        </div>
-                    </div>
+                <div className="barbox">
+                    <h4>Experiance</h4>
+                    <div className="expbtn" onClick={handleopenAdd}>Add Experiance</div>
                 </div>
-                <div className="expfield">
-                    <div className="explogo">
-                        <img src="/ext.png" alt="" />
+                {exp.map((item) => (
+                    <div className="expfield">
+                        <div className="explogo">
+                            <img src="/ext.png" alt="" />
+                        </div>
+                        <div className="expinfo">
+                            <div className="exptitle">
+                                <div className="exptitletext">{item.expDesignation} </div>
+                                <div className="expbtn"><BiSolidEdit className='expicon' onClick={handleOpenEdit} /> <MdDelete className='expicon' onClick={() => handleexpremove(item)} /></div>
+                            </div>
+                            <div className="expbox">
+                                <div className="left">{item.expCompany}</div>
+                                <div className="right">{item.expCompanyType}</div>
+                            </div>
+                            <div className="expbox">
+                                <div className="left">{item.expCompanyJoinDate} to {item.expCompanyEndDate}</div>
+                                <div className="right rightcolor">{item.range}</div>
+                            </div>
+                            <div className="expdetails">
+                                {item.expDetails}
+                            </div>
+                        </div>
                     </div>
-                    <div className="expinfo">
-                        <div className="exptitle">
-                            UX/UI designer
-                        </div>
-                        <div className="expbox">
-                            <div className="left">Upwork</div>
-                            <div className="right">International</div>
-                        </div>
-                        <div className="expbox">
-                            <div className="left">Jun 2019 — Present</div>
-                            <div className="right rightcolor">3 mos</div>
-                        </div>
-                        <div className="expdetails">
-                            New experience with Upwork system. Work in next areas: UX/UI design, graphic design, interaction design, UX research.
-                        </div>
-                    </div>
-                </div>
+                ))}
+
+
             </div>
 
             <div className="education">
@@ -259,6 +350,75 @@ const Home = () => {
                     </div>
                 </div>
             </div>
+
+
+            <Modal
+                open={openAdd}
+                onClose={handleCloseAdd}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={styleAdd}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Add Experiance
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        <TextField id="outlined-controlled" label="Designation" sx={{ width: 500 }} onChange={(e) => { setExpDesignation(e.target.value) }} value={expDesignation} />
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        <TextField id="outlined-controlled" label="Company" sx={{ width: 350 }} onChange={(e) => { setExpCompany(e.target.value) }} value={expCompany} />
+                        <TextField id="outlined-basic" label="Type" variant="outlined" sx={{ ml: 5, width: 250 }} onChange={(e) => { setExpCompanyType(e.target.value) }} value={expCompanyType} />
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        <LocalizationProvider dateAdapter={AdapterDayjs}>
+                            <DatePicker
+                                label="Joining date"
+                                sx={{ width: 250 }}
+                                onChange={handleinputexpCompanyJoinDate}
+                                value={dayjs(expCompanyJoinDate)}
+                            />
+                            <DatePicker
+                                label="Ending date"
+                                sx={{ ml: 5, width: 250 }}
+                                onChange={handleinputexpCompanyEndDate}
+                                value={dayjs(expCompanyEndDate)}
+                            />
+                        </LocalizationProvider>
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        <TextField
+                            id="outlined-multiline-flexible"
+                            label="Details"
+                            multiline
+                            maxRows={4}
+                            sx={{ width: 640 }}
+                            onChange={(e) => setExpDetails(e.target.value)}
+                            value={expDetails}
+                        />
+                    </Typography>
+                    <Button variant="contained" href="#contained-buttons" size="small" sx={{ mt: 2 }} onClick={handleExpAdd}>
+                        Save
+                    </Button>
+                </Box>
+            </Modal>
+
+
+
+            <Modal
+                open={openEdit}
+                onClose={handleCloseEdit}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={styleEdit}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                        Text in a modal
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                        Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                    </Typography>
+                </Box>
+            </Modal>
         </div>
     )
 }

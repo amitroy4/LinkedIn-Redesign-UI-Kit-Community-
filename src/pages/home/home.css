@@ -214,6 +214,22 @@
     border-radius: 5px;
 }
 
+.experiance .barbox {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.experiance .barbox .expbtn {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.experiance .barbox .expbtn:hover {
+    color: #0077B5;
+    cursor: pointer;
+}
+
 .experiance>h4 {
     font-size: 18px;
     font-weight: 600;
@@ -249,6 +265,19 @@
     font-size: 16px;
     font-weight: 500;
     margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.experiance .expfield .expinfo .exptitle .expicon {
+    margin-right: 10px;
+    font-size: 16px;
+    transition: all linear 0.4s;
+}
+
+.experiance .expfield .expinfo .exptitle .expicon:hover {
+    color: #0077B5;
+    cursor: pointer;
 }
 
 .experiance .expfield .expinfo .expbox {

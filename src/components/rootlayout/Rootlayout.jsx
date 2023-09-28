@@ -130,7 +130,9 @@ const Rootlayout = () => {
                 <div className='navcontainer'>
                     <div className="navbarbox">
                         <div className="navleft">
-                            <img src="/logo.png" alt="" />
+                            <Link to='/LinkedIn/home'>
+                                <img src="/logo.png" alt="" />
+                            </Link>
                         </div>
                         <div className="navright">
                             <img onClick={() => setMenu(!menu)} src={userData.photoURL} alt="" />
