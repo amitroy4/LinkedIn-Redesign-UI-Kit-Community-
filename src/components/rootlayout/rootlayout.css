@@ -77,6 +77,16 @@
     z-index: 100;
 }
 
+.navcontainer .navbar .user .text>p {
+    transition: all linear 0.1s;
+}
+
+.navcontainer .navbar .user .text>p:hover {
+    cursor: pointer;
+    color: #32375C;
+    border-bottom: 0.1px solid #32375c8d;
+}
+
 .navcontainer .navbar .active {
     justify-content: center;
     padding: 5px;
