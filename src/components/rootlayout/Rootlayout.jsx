@@ -3,6 +3,7 @@ import React, { useEffect } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import './rootlayout.css'
 import { AiFillHome, AiOutlineUser } from 'react-icons/ai';
+import { PiPencilLineBold } from 'react-icons/pi';
 import { HiUserGroup } from 'react-icons/hi';
 import { BsFillChatFill } from 'react-icons/bs';
 import { CgMenuRound } from 'react-icons/cg';
@@ -164,7 +165,7 @@ const Rootlayout = () => {
                                         </li>
                                         <li >
                                             <Link to='/LinkedIn/chat' className={location.pathname == "/LinkedIn/chat" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
-                                                <BsFillChatFill /> Chat
+                                                <PiPencilLineBold /> Post
                                             </Link>
                                         </li>
                                         <li >
