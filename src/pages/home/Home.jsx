@@ -242,7 +242,7 @@ const Home = () => {
                     })
                 }
             })
-            setExp(arr)
+            setExp(arr.reverse())
         });
         console.log(exp);
     }, [])
@@ -354,7 +354,7 @@ const Home = () => {
                     <h4>Experiance</h4>
                     <div className="expbtn" onClick={handleopenAdd}>Add Experiance</div>
                 </div>
-                {exp.reverse().map((item) => (
+                {exp.map((item) => (
                     <div className="expfield">
                         <div className="explogo">
                             <img src="/ext.png" alt="" />
