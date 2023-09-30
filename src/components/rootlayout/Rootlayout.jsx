@@ -145,7 +145,9 @@ const Rootlayout = () => {
                                         <div className='navbar'>
                                             <div className="user">
                                                 <div className="left">
-                                                    <img src={userData.photoURL} alt="" />
+                                                    <Link to='/LinkedIn/home'>
+                                                        <img src={userData.photoURL} alt="" onClick={() => setMenu(!menu)} />
+                                                    </Link>
                                                     <div className="text">
                                                         <h4>{userData.displayName}</h4>
                                                         <p onClick={handleOpen}>Edit Profile</p>
@@ -168,18 +170,8 @@ const Rootlayout = () => {
                                                     </Link>
                                                 </li>
                                                 <li >
-                                                    <Link to='/LinkedIn/chat' className={location.pathname == "/LinkedIn/chat" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
+                                                    <Link to='/LinkedIn/posts' className={location.pathname == "/LinkedIn/posts" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
                                                         <PiPencilLineBold /> Post
-                                                    </Link>
-                                                </li>
-                                                <li >
-                                                    <Link to='/LinkedIn/chat' className={location.pathname == "/LinkedIn/group" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
-                                                        <HiUserGroup /> Group
-                                                    </Link>
-                                                </li>
-                                                <li >
-                                                    <Link to='/LinkedIn/chat' className={location.pathname == "/LinkedIn/firends" ? 'active' : 'icon'}>
-                                                        <CgMenuRound /> People
                                                     </Link>
                                                 </li>
                                             </ul>

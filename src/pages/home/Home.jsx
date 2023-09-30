@@ -165,7 +165,6 @@ const Home = () => {
 
     const handlePhoneChange = (newValue) => {
         setphonenumber(newValue)
-        console.log(phonenumber)
     }
 
 
@@ -244,7 +243,6 @@ const Home = () => {
             })
             setExp(arr.reverse())
         });
-        console.log(exp);
     }, [])
 
     return (
@@ -331,7 +329,7 @@ const Home = () => {
             <div className="section">
                 <Link to='/LinkedIn/home' className={location.pathname == "/LinkedIn/home" ? "profile active" : "profile"}>Profile</Link>
                 <Link to='/LinkedIn/friends' className={location.pathname == "/LinkedIn/friends" ? "friends active" : "friends"}>Friends</Link>
-                <Link className="post" >Post</Link>
+                <Link to='/LinkedIn/posts' className={location.pathname == "/LinkedIn/posts" ? "post active" : "post"}>Post</Link>
             </div>
             <div className="about">
                 <h4>About</h4>
@@ -355,7 +353,7 @@ const Home = () => {
                     <div className="expbtn" onClick={handleopenAdd}>Add Experiance</div>
                 </div>
                 {exp.map((item) => (
-                    <div className="expfield">
+                    <div className="expfield" key={item.id}>
                         <div className="explogo">
                             <img src="/ext.png" alt="" />
                         </div>

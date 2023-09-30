@@ -14,6 +14,7 @@ import firebaseConfig from './firebaseConfig';
 import Home from './pages/home/Home';
 import Rootlayout from './components/rootlayout/Rootlayout';
 import People from './pages/people/People';
+import Posts from './components/posts/Posts';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -23,6 +24,7 @@ const router = createBrowserRouter(
       <Route path="/LinkedIn" element={<Rootlayout />}>
         <Route path="home" element={<Home />}></Route>
         <Route path="friends" element={<People />}></Route>
+        <Route path="posts" element={<Posts/>}></Route>
       </Route>
     </Route>
   )
