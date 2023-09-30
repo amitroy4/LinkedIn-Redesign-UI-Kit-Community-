@@ -35,7 +35,7 @@ const Posts = () => {
                     id: item.key,
                 })
             })
-            setAllPost(arr)
+            setAllPost(arr.reverse())
         });
     }, [])
 
