@@ -23,6 +23,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs'
+import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 
 import { MuiTelInput } from 'mui-tel-input'
 
@@ -121,7 +122,6 @@ const Rootlayout = () => {
 
     const handlePhoneChange = (newValue) => {
         setphonenumber(newValue)
-        console.log(phonenumber);
     }
 
 
@@ -136,51 +136,58 @@ const Rootlayout = () => {
                             </Link>
                         </div>
                         <div className="navright">
-                            <img onClick={() => setMenu(!menu)} src={userData.photoURL} alt="" />
-                            {
-                                menu && <div className='navbar'>
-                                    <div className="user">
-                                        <div className="left">
-                                            <img src={userData.photoURL} alt="" />
-                                            <div className="text">
-                                                <h4>{userData.displayName}</h4>
-                                                <p onClick={handleOpen}>Edit Profile</p>
+
+                            <ClickAwayListener onClickAway={() => setMenu(false)}>
+                                <Box>
+                                    <img onClick={() => setMenu(!menu)} src={userData.photoURL} alt="" />
+                                    {
+                                        menu &&
+                                        <div className='navbar'>
+                                            <div className="user">
+                                                <div className="left">
+                                                    <img src={userData.photoURL} alt="" />
+                                                    <div className="text">
+                                                        <h4>{userData.displayName}</h4>
+                                                        <p onClick={handleOpen}>Edit Profile</p>
+                                                    </div>
+                                                </div>
+                                                <div className="right">
+                                                    <FiSettings className='settings' />
+                                                    <MdPowerSettingsNew onClick={handleLogOut} className='logout' />
+                                                </div>
                                             </div>
+                                            <ul>
+                                                <li >
+                                                    <Link to='/LinkedIn/home' className={location.pathname == "/LinkedIn/home" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
+                                                        <AiFillHome /> Home
+                                                    </Link>
+                                                </li>
+                                                <li >
+                                                    <Link to='/LinkedIn/friends' className={location.pathname == "/LinkedIn/friends" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
+                                                        <AiOutlineUser /> Friends
+                                                    </Link>
+                                                </li>
+                                                <li >
+                                                    <Link to='/LinkedIn/chat' className={location.pathname == "/LinkedIn/chat" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
+                                                        <PiPencilLineBold /> Post
+                                                    </Link>
+                                                </li>
+                                                <li >
+                                                    <Link to='/LinkedIn/chat' className={location.pathname == "/LinkedIn/group" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
+                                                        <HiUserGroup /> Group
+                                                    </Link>
+                                                </li>
+                                                <li >
+                                                    <Link to='/LinkedIn/chat' className={location.pathname == "/LinkedIn/firends" ? 'active' : 'icon'}>
+                                                        <CgMenuRound /> People
+                                                    </Link>
+                                                </li>
+                                            </ul>
                                         </div>
-                                        <div className="right">
-                                            <FiSettings className='settings' />
-                                            <MdPowerSettingsNew onClick={handleLogOut} className='logout' />
-                                        </div>
-                                    </div>
-                                    <ul>
-                                        <li >
-                                            <Link to='/LinkedIn/home' className={location.pathname == "/LinkedIn/home" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
-                                                <AiFillHome /> Home
-                                            </Link>
-                                        </li>
-                                        <li >
-                                            <Link to='/LinkedIn/friends' className={location.pathname == "/LinkedIn/friends" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
-                                                <AiOutlineUser /> Friends
-                                            </Link>
-                                        </li>
-                                        <li >
-                                            <Link to='/LinkedIn/chat' className={location.pathname == "/LinkedIn/chat" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
-                                                <PiPencilLineBold /> Post
-                                            </Link>
-                                        </li>
-                                        <li >
-                                            <Link to='/LinkedIn/chat' className={location.pathname == "/LinkedIn/group" ? 'active' : 'icon'} onClick={() => setMenu(!menu)}>
-                                                <HiUserGroup /> Group
-                                            </Link>
-                                        </li>
-                                        <li >
-                                            <Link to='/LinkedIn/chat' className={location.pathname == "/LinkedIn/firends" ? 'active' : 'icon'}>
-                                                <CgMenuRound /> People
-                                            </Link>
-                                        </li>
-                                    </ul>
-                                </div>
-                            }
+                                    }
+                                </Box>
+                            </ClickAwayListener>
+
 
                             <Modal
                                 open={open}
