@@ -24,6 +24,7 @@ import { getDatabase, ref, onValue, set, push, remove } from "firebase/database"
 import { BiSolidEdit } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import { differenceInDays } from 'date-fns'
+import Education from '../../components/education/Education';
 
 
 const style = {
@@ -47,6 +48,16 @@ const styleAdd = {
 };
 
 const styleEdit = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 700,
+    bgcolor: 'background.paper',
+    p: 4,
+};
+
+const styleContact = {
     position: 'absolute',
     top: '50%',
     left: '50%',
@@ -90,6 +101,12 @@ const Home = () => {
     let [expCompanyEndDate, setExpCompanyEndDate] = useState('');
     let [expDetails, setExpDetails] = useState('');
     let [expId, setExpId] = useState('');
+
+
+
+    const [openContact, setopenContact] = useState(false);
+    const handleopenContact = () => setopenContact(true);
+    const handleCloseContact = () => setopenContact(false);
 
 
     const [openEdit, setOpenEdit] = useState(false);
@@ -320,9 +337,29 @@ const Home = () => {
                         <div className="details">
                             {currentUser.info}
                         </div>
-                        <Button size="small" variant="contained" href="#contained-buttons">
+                        <Button size="small" variant="contained" onClick={handleopenContact}>
                             Contact info
                         </Button>
+                        <Modal
+                            open={openContact}
+                            onClose={handleCloseContact}
+                            aria-labelledby="modal-modal-title"
+                            aria-describedby="modal-modal-description"
+                        >
+                            <Box sx={styleContact}>
+                                <Typography id="modal-modal-title" variant="h6" component="h2">
+                                    Contact info
+                                </Typography>
+                                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                    Name: {username} <br />
+                                    Date of birth: {dateofbirth} <br />
+                                    Phone number: {phonenumber} <br />
+                                    Email: {email} <br />
+                                    Address: {address}
+
+                                </Typography>
+                            </Box>
+                        </Modal>
                     </div>
                 </div>
             </div>
@@ -376,27 +413,9 @@ const Home = () => {
                         </div>
                     </div>
                 ))}
-
-
             </div>
 
-            <div className="education">
-                <div className="h4">Education</div>
-                <div className="edufield">
-                    <div className="edulogo">
-                        <img src="/ext.png" alt="" />
-                    </div>
-                    <div className="eduinfo">
-                        <div className="title">Moscow State Linguistic University</div>
-                        <div className="degree">
-                            Bachelor's degree Field Of StudyComputer and Information Systems Security/Information Assurance
-                        </div>
-                        <div className="year">2013 — 2017</div>
-                        <div className="courses">Additional English classes and UX profile courses​.</div>
-                    </div>
-                </div>
-            </div>
-
+            <Education />
 
             <Modal
                 open={openAdd}

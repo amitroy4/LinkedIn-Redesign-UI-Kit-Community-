@@ -78,6 +78,7 @@
 }
 
 .navcontainer .navbar .user .text>p {
+    border-bottom: 0.1px solid transparent;
     transition: all linear 0.1s;
 }
 
