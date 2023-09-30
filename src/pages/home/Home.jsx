@@ -351,11 +351,11 @@ const Home = () => {
                                     Contact info
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    Name: {username} <br />
-                                    Date of birth: {dateofbirth} <br />
-                                    Phone number: {phonenumber} <br />
-                                    Email: {email} <br />
-                                    Address: {address}
+                                    Name: {currentUser.username} <br />
+                                    Date of birth: {currentUser.dateofbirth} <br />
+                                    Phone number: {currentUser.phonenumber} <br />
+                                    Email: {currentUser.email} <br />
+                                    Address: {currentUser.address}
 
                                 </Typography>
                             </Box>
