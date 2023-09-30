@@ -15,13 +15,38 @@ const Posts = () => {
     let [friends, setFriends] = useState([]);
 
     let handlePost = () => {
-        set(push(ref(db, 'posts/')), {
-            whopost: userData.uid,
-            whopostname: userData.displayName,
-            posts: postChange,
-        });
+        if (postChange != "") {
+            set(push(ref(db, 'posts/')), {
+                whopost: userData.uid,
+                whopostname: userData.displayName,
+                posts: postChange,
+            });
+        }
+
     }
 
+    useEffect(() => {
+        const usersRef = ref(db, 'friends/');
+        onValue(usersRef, (snapshot) => {
+            let arr = []
+            snapshot.forEach(item => {
+                console.log(item);
+                if (userData.uid == item.val().senderid) {
+                    arr.push(item.val().receiverid)
+                    console.log('R', item.val().receiverid);
+                }
+                if (userData.uid == item.val().receiverid) {
+                    console.log('S', item.val().senderid);
+                    arr.push(item.val().senderid)
+                }
+            })
+            setFriends(arr)
+        });
+        console.log(friends);
+
+
+
+    }, [])
 
 
     useEffect(() => {
@@ -29,7 +54,6 @@ const Posts = () => {
         onValue(postsRef, (snapshot) => {
             let arr = []
             snapshot.forEach(item => {
-
                 arr.push({
                     ...item.val(),
                     id: item.key,
@@ -37,10 +61,8 @@ const Posts = () => {
             })
             setAllPost(arr.reverse())
         });
+        console.log(allPost);
     }, [])
-
-
-    console.log('Froiends', friends);
 
     return (
         <div className="container">
@@ -60,25 +82,26 @@ const Posts = () => {
                 </div>
             </div>
 
-
-            {allPost.map((item) => (
-                <div className="post">
-                    <div className="profile">
-                        <div className="left">
-                            <div className="proimg">
-                                <img src="/propic.jpeg" alt="" />
+            <section className='allpost'>
+                {allPost.map((item) => ((friends == item.whopost || userData.uid == item.whopost) &&
+                    <div className="post">
+                        <div className="profile">
+                            <div className="left">
+                                <div className="proimg">
+                                    <img src="/propic.jpeg" alt="" />
+                                </div>
+                                <div className="proinfo">
+                                    <div className="name">{item.whopostname}</div>
+                                    <div className="desig">Student</div>
+                                </div>
                             </div>
-                            <div className="proinfo">
-                                <div className="name">{item.whopostname}</div>
-                                <div className="desig">Student</div>
-                            </div>
+                            <div className="right">bar</div>
                         </div>
-                        <div className="right">bar</div>
+                        <div className="text">{item.posts}</div>
+                        {/* <div className="postimg">s</div> */}
                     </div>
-                    <div className="text">{item.posts}</div>
-                    {/* <div className="postimg">s</div> */}
-                </div>
-            ))}
+                ))}
+            </section>
 
 
         </div>
