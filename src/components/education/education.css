@@ -20,6 +20,7 @@
 
 .education .edufield .eduinfo {
     padding-left: 20px;
+    width: 100%;
 }
 
 .education .edufield {
@@ -54,4 +55,41 @@
 .education .edufield .eduinfo .courses {
     font-size: 14px;
     font-weight: 400;
+}
+
+.education .barbox {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.education .barbox .edubtn {
+    font-size: 12px;
+    font-weight: 400;
+}
+
+.education .barbox .edubtn:hover {
+    color: #0077B5;
+    cursor: pointer;
+}
+
+.education .barbox>h4 {
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.education .eduinfo .titlebox {
+    display: flex;
+    justify-content: space-between;
+}
+
+.education .eduinfo .titlebox .eduicon {
+    margin-right: 10px;
+    font-size: 16px;
+    transition: all linear 0.4s;
+}
+
+.education .eduinfo .titlebox .eduicon:hover {
+    color: #0077B5;
+    cursor: pointer;
 }
