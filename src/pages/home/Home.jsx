@@ -243,7 +243,7 @@ const Home = () => {
             setExpCompanyEndDate('');
             setExpDetails('');
             setOpenEdit(false)
-        });;
+        });
     }
 
 

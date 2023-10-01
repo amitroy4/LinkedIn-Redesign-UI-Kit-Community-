@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import './education.css'
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
@@ -11,7 +11,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs'
-import { getDatabase, ref, set, push } from "firebase/database";
+import { getDatabase, ref, set, push, onValue, remove } from "firebase/database";
 import { useSelector } from 'react-redux';
 
 
@@ -63,12 +63,6 @@ const Education = () => {
     }
 
     let handleEduSave = () => {
-        console.log(institution);
-        console.log(eduDegree);
-        console.log(eduInstitutionJoinDate);
-        console.log(eduInstitutionEndDate);
-        console.log(eduDetails);
-
         set(push(ref(db, 'educations/')), {
             userid: userData.uid,
             institution: institution,
@@ -76,7 +70,34 @@ const Education = () => {
             eduInstitutionJoinDate: eduInstitutionJoinDate,
             eduInstitutionEndDate: eduInstitutionEndDate,
             eduDetails: eduDetails,
+        }).then(() => {
+            setInstitution('');
+            setEduDegree('');
+            setEduInstitutionJoinDate('');
+            setEduInstitutionEndDate('');
+            setEduDetails('');
+            setopenAdd(false)
         });
+    }
+
+
+    useEffect(() => {
+        onValue(ref(db, 'educations/'), (snapshot) => {
+            let arr = []
+            snapshot.forEach(item => {
+                if (userData.uid == item.val().userid) {
+                    arr.push({
+                        ...item.val(),
+                        id: item.key,
+                    })
+                }
+            })
+            setEdu(arr.reverse())
+        });
+    }, [])
+
+    let handleeduremove = (item) => {
+        remove(ref(db, 'educations/' + item.id));
     }
 
     return (
@@ -96,14 +117,21 @@ const Education = () => {
                             Add Education
                         </Typography>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                            <TextField id="outlined-controlled" label="Institution" sx={{ width: 500 }}
+                            <TextField id="outlined-controlled" label="Institution" sx={{ width: 700 }}
                                 onChange={(e) => setInstitution(e.target.value)}
                                 value={institution}
                             />
                         </Typography>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                            <TextField id="outlined-controlled" label="Degree" sx={{ width: 350 }} onChange={(e) => setEduDegree(e.target.value)}
-                                value={eduDegree} />
+                            <TextField
+                                id="outlined-multiline-flexible"
+                                label="Degree"
+                                multiline
+                                maxRows={2}
+                                sx={{ width: 700 }}
+                                onChange={(e) => setEduDegree(e.target.value)}
+                                value={eduDegree}
+                            />
                         </Typography>
                         <Typography id="modal-modal-description" sx={{ mt: 2 }}>
                             <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -127,7 +155,7 @@ const Education = () => {
                                 label="Details"
                                 multiline
                                 maxRows={4}
-                                sx={{ width: 640 }}
+                                sx={{ width: 700 }}
                                 onChange={(e) => setEduDetails(e.target.value)}
                                 value={eduDetails}
                             />
@@ -140,23 +168,28 @@ const Education = () => {
 
 
             </div>
-            <div className="edufield">
-                <div className="edulogo">
-                    <img src="/ext.png" alt="" />
-                </div>
-                <div className="eduinfo">
-                    <div className="titlebox">
-                        <div className="title">Moscow State Linguistic University</div>
+            {
+                edu.map((item) => (
+                    <div className="edufield" key={item.id}>
+                        <div className="edulogo">
+                            <img src="/ext.png" alt="" />
+                        </div>
+                        <div className="eduinfo">
+                            <div className="titlebox">
+                                <div className="title">{item.institution}</div>
 
-                        <div className="edubtn"><BiSolidEdit className='eduicon' /> <MdDelete className='eduicon' /></div>
+                                <div className="edubtn"><BiSolidEdit className='eduicon' /> <MdDelete className='eduicon' onClick={() => handleeduremove(item)} /></div>
+                            </div>
+                            <div className="degree">
+                                {item.eduDegree}
+                            </div>
+                            <div className="year">{item.eduInstitutionJoinDate} — {item.eduInstitutionEndDate}</div>
+                            <div className="courses">{item.eduDetails}</div>
+                        </div>
                     </div>
-                    <div className="degree">
-                        Bachelor's degree Field Of StudyComputer and Information Systems Security/Information Assurance
-                    </div>
-                    <div className="year">2013 — 2017</div>
-                    <div className="courses">Additional English classes and UX profile courses​.</div>
-                </div>
-            </div>
+                ))
+            }
+
         </div>
     )
 }
