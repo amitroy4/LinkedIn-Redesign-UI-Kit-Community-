@@ -25,6 +25,15 @@ const styleAdd = {
     bgcolor: 'background.paper',
     p: 4,
 };
+const styleEdit = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 700,
+    bgcolor: 'background.paper',
+    p: 4,
+};
 
 
 
@@ -44,6 +53,28 @@ const Education = () => {
     let [eduInstitutionEndDate, setEduInstitutionEndDate] = useState('');
     let [eduDetails, setEduDetails] = useState('');
     let [edu, setEdu] = useState([]);
+    let [eduId, setEduId] = useState('');
+
+
+    const [openEdit, setopenEdit] = useState(false);
+    const handleopenEdit = (item) => {
+        setEduId(item.id)
+        setInstitution(item.institution);
+        setEduDegree(item.eduDegree);
+        setEduInstitutionJoinDate(item.eduInstitutionJoinDate);
+        setEduInstitutionEndDate(item.eduInstitutionEndDate);
+        setEduDetails(item.eduDetails);
+        setopenEdit(true)
+    };
+    const handleCloseEdit = () => {
+        setInstitution('');
+        setEduDegree('');
+        setEduInstitutionJoinDate('');
+        setEduInstitutionEndDate('');
+        setEduDetails('');
+        setopenEdit(false)
+    };
+
 
 
     let handleinputeduInstutionJoinDate = (e) => {
@@ -77,6 +108,23 @@ const Education = () => {
             setEduInstitutionEndDate('');
             setEduDetails('');
             setopenAdd(false)
+        });
+    }
+    let handleEduEdit = (item) => {
+        set(ref(db, 'educations/' + eduId), {
+            userid: userData.uid,
+            institution: institution,
+            eduDegree: eduDegree,
+            eduInstitutionJoinDate: eduInstitutionJoinDate,
+            eduInstitutionEndDate: eduInstitutionEndDate,
+            eduDetails: eduDetails,
+        }).then(() => {
+            setInstitution('');
+            setEduDegree('');
+            setEduInstitutionJoinDate('');
+            setEduInstitutionEndDate('');
+            setEduDetails('');
+            setopenEdit(false)
         });
     }
 
@@ -178,7 +226,70 @@ const Education = () => {
                             <div className="titlebox">
                                 <div className="title">{item.institution}</div>
 
-                                <div className="edubtn"><BiSolidEdit className='eduicon' /> <MdDelete className='eduicon' onClick={() => handleeduremove(item)} /></div>
+                                <div className="edubtn">
+                                    <BiSolidEdit className='eduicon' onClick={() => handleopenEdit(item)} />
+
+                                    <Modal
+                                        open={openEdit}
+                                        onClose={handleCloseEdit}
+                                        aria-labelledby="modal-modal-title"
+                                        aria-describedby="modal-modal-description"
+                                    >
+                                        <Box sx={styleAdd}>
+                                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                                                Add Education
+                                            </Typography>
+                                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                                <TextField id="outlined-controlled" label="Institution" sx={{ width: 700 }}
+                                                    onChange={(e) => setInstitution(e.target.value)}
+                                                    value={institution}
+                                                />
+                                            </Typography>
+                                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                                <TextField
+                                                    id="outlined-multiline-flexible"
+                                                    label="Degree"
+                                                    multiline
+                                                    maxRows={2}
+                                                    sx={{ width: 700 }}
+                                                    onChange={(e) => setEduDegree(e.target.value)}
+                                                    value={eduDegree}
+                                                />
+                                            </Typography>
+                                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                    <DatePicker
+                                                        label="Joining date"
+                                                        sx={{ width: 250 }}
+                                                        onChange={handleinputeduInstutionJoinDate}
+                                                        value={dayjs(eduInstitutionJoinDate)}
+                                                    />
+                                                    <DatePicker
+                                                        label="Ending date"
+                                                        sx={{ ml: 5, width: 250 }}
+                                                        onChange={handleinputeduInstutionEndDate}
+                                                        value={dayjs(eduInstitutionEndDate)}
+                                                    />
+                                                </LocalizationProvider>
+                                            </Typography>
+                                            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                                <TextField
+                                                    id="outlined-multiline-flexible"
+                                                    label="Details"
+                                                    multiline
+                                                    maxRows={4}
+                                                    sx={{ width: 700 }}
+                                                    onChange={(e) => setEduDetails(e.target.value)}
+                                                    value={eduDetails}
+                                                />
+                                            </Typography>
+                                            <Button variant="contained" href="#contained-buttons" size="small" sx={{ mt: 2 }} onClick={() => handleEduEdit(item)}>
+                                                Update
+                                            </Button>
+                                        </Box>
+                                    </Modal>
+
+                                    <MdDelete className='eduicon' onClick={() => handleeduremove(item)} /></div>
                             </div>
                             <div className="degree">
                                 {item.eduDegree}
