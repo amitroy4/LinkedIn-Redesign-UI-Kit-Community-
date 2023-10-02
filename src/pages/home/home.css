@@ -129,6 +129,11 @@
     text-transform: uppercase;
 }
 
+.container .section .profile:hover {
+    color: white;
+    background: #0076b586;
+}
+
 .container .section .friends {
     width: 33.3333%;
     padding-top: 11px;
@@ -139,6 +144,12 @@
     text-decoration: none;
     color: #181818;
     text-transform: uppercase;
+    transition: all linear 0.4s;
+}
+
+.container .section .friends:hover {
+    color: white;
+    background: #0076b586;
 }
 
 .container .section .post {
@@ -150,6 +161,12 @@
     text-decoration: none;
     color: #181818;
     text-transform: uppercase;
+    transition: all linear 0.4s;
+}
+
+.container .section .post:hover {
+    color: white;
+    background: #0076b586;
 }
 
 .container .section .active {
