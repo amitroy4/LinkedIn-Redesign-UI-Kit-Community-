@@ -4,8 +4,28 @@ import FormControl, { useFormControl } from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import { TextField } from '@mui/material';
 import { BsImage, BsFillSendFill } from 'react-icons/bs';
-import { getDatabase, ref, set, push, onValue } from "firebase/database";
+import { getDatabase, ref, set, push, onValue, remove } from "firebase/database";
 import { useSelector } from 'react-redux';
+import { BiSolidEdit } from "react-icons/bi";
+import { MdDelete } from "react-icons/md";
+
+import Modal from '@mui/material/Modal';
+import Box from '@mui/material/Box';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import moment from 'moment';
+
+
+const styleEdit = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 700,
+    bgcolor: 'background.paper',
+    p: 4,
+};
+
 
 const Posts = () => {
     const db = getDatabase();
@@ -14,12 +34,15 @@ const Posts = () => {
     let [allPost, setAllPost] = useState([])
     let [friends, setFriends] = useState([]);
 
+    let [editPost, setEditPost] = useState("")
+
     let handlePost = () => {
         if (postChange != "") {
             set(push(ref(db, 'posts/')), {
                 whopost: userData.uid,
                 whopostname: userData.displayName,
                 posts: postChange,
+                date: "Posted on " + moment().format('lll'),
             }).then(() => {
                 setPostChange("")
             });
@@ -34,18 +57,13 @@ const Posts = () => {
             snapshot.forEach(item => {
                 if (userData.uid == item.val().senderid) {
                     arr.push(item.val().receiverid)
-                    console.log('R', item.val().receiverid);
                 }
                 else if (userData.uid == item.val().receiverid) {
-                    console.log('S', item.val().senderid);
                     arr.push(item.val().senderid)
                 }
             })
             setFriends(arr)
         });
-
-
-
     }, [])
 
 
@@ -61,9 +79,36 @@ const Posts = () => {
             })
             setAllPost(arr.reverse())
         });
-        console.log(allPost);
     }, [])
 
+
+    const [openEdit, setopenEdit] = useState(false);
+    const handleopenEdit = (item) => {
+        setEditPost(item.posts);
+        setopenEdit(true)
+    };
+    const handleCloseEdit = () => {
+        setEditPost("");
+        setopenEdit(false)
+    };
+
+    let handleEdit = (item) => {
+        set(ref(db, 'posts/' + item.id), {
+            whopost: userData.uid,
+            whopostname: userData.displayName,
+            posts: editPost,
+            date: "Updated on " + moment().format('lll'),
+        }).then(() => {
+            setEditPost("");
+            setopenEdit(false)
+        });
+    }
+
+
+
+    let handlePostRemove = (item) => {
+        remove(ref(db, 'posts/' + item.id));
+    }
     return (
         <div className="container">
             <div className="newpost">
@@ -86,7 +131,7 @@ const Posts = () => {
             <section className='allpost'>
                 {allPost.map((item) => (
                     (userData.uid == item.whopost) ?
-                        <div className="post">
+                        <div className="post" key={item.id}>
                             <div className="profile">
                                 <div className="left">
                                     <div className="proimg">
@@ -94,10 +139,45 @@ const Posts = () => {
                                     </div>
                                     <div className="proinfo">
                                         <div className="name">{item.whopostname}</div>
-                                        <div className="desig">Student</div>
+                                        <div className="profession">Student</div>
+
                                     </div>
                                 </div>
-                                <div className="right">bar</div>
+                                {
+                                    userData.uid == item.whopost && <div className="right">
+                                        <div className="date">{item.date}</div>
+                                        <BiSolidEdit className='icon' onClick={() => handleopenEdit(item)} />
+                                        <Modal
+                                            open={openEdit}
+                                            onClose={handleCloseEdit}
+                                            aria-labelledby="modal-modal-title"
+                                            aria-describedby="modal-modal-description"
+                                        >
+                                            <Box sx={styleEdit}>
+                                                <Typography id="modal-modal-title" variant="h6" component="h2">
+                                                    Edit Post
+                                                </Typography>
+
+                                                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                                    <TextField
+                                                        id="outlined-multiline-flexible"
+                                                        label="What's on your mind?"
+                                                        multiline
+                                                        maxRows={4}
+                                                        sx={{ width: 700 }}
+                                                        onChange={(e) => setEditPost(e.target.value)}
+                                                        value={editPost}
+                                                    />
+                                                </Typography>
+                                                <Button variant="contained" href="#contained-buttons" size="small" sx={{ mt: 2 }} onClick={() => handleEdit(item)}>
+                                                    Update
+                                                </Button>
+                                            </Box>
+                                        </Modal>
+
+                                        <MdDelete className='icon' onClick={() => handlePostRemove(item)} />
+                                    </div>
+                                }
                             </div>
                             <div className="text">{item.posts}</div>
                             {/* <div className="postimg">s</div> */}
@@ -105,7 +185,7 @@ const Posts = () => {
                         :
                         friends.map((frnditem) => (
                             (frnditem == item.whopost) &&
-                            <div className="post">
+                            <div className="post" key={frnditem.key}>
                                 <div className="profile">
                                     <div className="left">
                                         <div className="proimg">
@@ -113,10 +193,14 @@ const Posts = () => {
                                         </div>
                                         <div className="proinfo">
                                             <div className="name">{item.whopostname}</div>
-                                            <div className="desig">Student</div>
+                                            <div className="profession">Student</div>
+
                                         </div>
                                     </div>
-                                    <div className="right">bar</div>
+                                    <div className="right">
+                                        <div className="date">{item.date}</div>
+                                    </div>
+
                                 </div>
                                 <div className="text">{item.posts}</div>
                                 {/* <div className="postimg">s</div> */}

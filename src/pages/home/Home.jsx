@@ -82,7 +82,7 @@ const Home = () => {
     let [about, setabout] = useState('');
 
 
-    const [isShowMore, setIsShowMore] = useState(false);
+    const [isShowMore, setIsShowMore] = useState(true);
 
     const toggleReadMoreLess = () => {
         setIsShowMore(!isShowMore);
@@ -377,11 +377,17 @@ const Home = () => {
             </div>
             <div className="about">
                 <h4>About</h4>
-                <p>{isShowMore ? currentUser.about.slice(0, 300)
-                    : currentUser.about}</p>
-                <Button size="small" onClick={toggleReadMoreLess}>
-                    {isShowMore ? "SEE MORE" : "SEE LESS"}
-                </Button>
+                {
+                    currentUser.about &&
+                    <>
+                        <p>{isShowMore ? currentUser.about.slice(0, 300)
+                            : currentUser.about}</p>
+                        <Button size="small" onClick={toggleReadMoreLess}>
+                            {isShowMore ? "SEE MORE" : "SEE LESS"}
+                        </Button>
+                    </>
+                }
+
 
             </div>
             <div className="projects">
