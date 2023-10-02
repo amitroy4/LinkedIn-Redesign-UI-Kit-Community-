@@ -77,4 +77,5 @@
 
 .container .allpost .post .text {
     width: 100%;
+    text-align: justify;
 }

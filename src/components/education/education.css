@@ -44,6 +44,7 @@
     font-size: 14px;
     font-weight: 400;
     margin-bottom: 5px;
+    text-align: justify;
 }
 
 .education .edufield .eduinfo .year {
@@ -55,6 +56,7 @@
 .education .edufield .eduinfo .courses {
     font-size: 14px;
     font-weight: 400;
+    text-align: justify;
 }
 
 .education .barbox {

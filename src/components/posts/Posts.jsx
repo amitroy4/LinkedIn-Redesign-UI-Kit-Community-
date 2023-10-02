@@ -20,6 +20,8 @@ const Posts = () => {
                 whopost: userData.uid,
                 whopostname: userData.displayName,
                 posts: postChange,
+            }).then(() => {
+                setPostChange("")
             });
         }
 
@@ -30,19 +32,17 @@ const Posts = () => {
         onValue(usersRef, (snapshot) => {
             let arr = []
             snapshot.forEach(item => {
-                console.log(item);
                 if (userData.uid == item.val().senderid) {
                     arr.push(item.val().receiverid)
                     console.log('R', item.val().receiverid);
                 }
-                if (userData.uid == item.val().receiverid) {
+                else if (userData.uid == item.val().receiverid) {
                     console.log('S', item.val().senderid);
                     arr.push(item.val().senderid)
                 }
             })
             setFriends(arr)
         });
-        console.log(friends);
 
 
 
@@ -76,6 +76,7 @@ const Posts = () => {
                         sx={{ width: 640 }}
                         placeholder="What’s on your mind?"
                         onChange={(e) => setPostChange(e.target.value)}
+                        value={postChange}
                     />
                     <BsImage className='icon' />
                     <BsFillSendFill className='icon' onClick={handlePost} />
@@ -83,23 +84,46 @@ const Posts = () => {
             </div>
 
             <section className='allpost'>
-                {allPost.map((item) => ((friends == item.whopost || userData.uid == item.whopost) &&
-                    <div className="post">
-                        <div className="profile">
-                            <div className="left">
-                                <div className="proimg">
-                                    <img src="/propic.jpeg" alt="" />
+                {allPost.map((item) => (
+                    (userData.uid == item.whopost) ?
+                        <div className="post">
+                            <div className="profile">
+                                <div className="left">
+                                    <div className="proimg">
+                                        <img src="/propic.jpeg" alt="" />
+                                    </div>
+                                    <div className="proinfo">
+                                        <div className="name">{item.whopostname}</div>
+                                        <div className="desig">Student</div>
+                                    </div>
                                 </div>
-                                <div className="proinfo">
-                                    <div className="name">{item.whopostname}</div>
-                                    <div className="desig">Student</div>
-                                </div>
+                                <div className="right">bar</div>
                             </div>
-                            <div className="right">bar</div>
+                            <div className="text">{item.posts}</div>
+                            {/* <div className="postimg">s</div> */}
                         </div>
-                        <div className="text">{item.posts}</div>
-                        {/* <div className="postimg">s</div> */}
-                    </div>
+                        :
+                        friends.map((frnditem) => (
+                            (frnditem == item.whopost) &&
+                            <div className="post">
+                                <div className="profile">
+                                    <div className="left">
+                                        <div className="proimg">
+                                            <img src="/propic.jpeg" alt="" />
+                                        </div>
+                                        <div className="proinfo">
+                                            <div className="name">{item.whopostname}</div>
+                                            <div className="desig">Student</div>
+                                        </div>
+                                    </div>
+                                    <div className="right">bar</div>
+                                </div>
+                                <div className="text">{item.posts}</div>
+                                {/* <div className="postimg">s</div> */}
+                            </div>
+
+                        ))
+
                 ))}
             </section>
 

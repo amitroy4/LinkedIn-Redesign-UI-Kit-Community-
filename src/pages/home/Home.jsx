@@ -82,6 +82,13 @@ const Home = () => {
     let [about, setabout] = useState('');
 
 
+    const [isShowMore, setIsShowMore] = useState(false);
+
+    const toggleReadMoreLess = () => {
+        setIsShowMore(!isShowMore);
+    };
+
+
     const [openAdd, setopenAdd] = useState(false);
     const handleopenAdd = () => setopenAdd(true);
     const handleCloseAdd = () => {
@@ -370,9 +377,10 @@ const Home = () => {
             </div>
             <div className="about">
                 <h4>About</h4>
-                <p>{currentUser.about}</p>
-                <Button size="small">
-                    SEE MORE
+                <p>{isShowMore ? currentUser.about.slice(0, 300)
+                    : currentUser.about}</p>
+                <Button size="small" onClick={toggleReadMoreLess}>
+                    {isShowMore ? "SEE MORE" : "SEE LESS"}
                 </Button>
 
             </div>
