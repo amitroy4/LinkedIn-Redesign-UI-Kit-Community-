@@ -1,4 +1,4 @@
-.scrollcontainer{
+.scrollcontainer {
     height: 100vh;
     overflow-y: scroll;
     padding-right: 30px;
@@ -112,6 +112,7 @@
 }
 
 .myprofile {
+    margin-top: 85px;
     position: absolute;
     top: 0;
     right: -300px;

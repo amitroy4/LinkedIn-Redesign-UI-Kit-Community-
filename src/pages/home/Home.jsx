@@ -25,6 +25,7 @@ import { BiSolidEdit } from "react-icons/bi";
 import { MdDelete } from "react-icons/md";
 import { differenceInDays } from 'date-fns'
 import Education from '../../components/education/Education';
+import { RxAvatar } from 'react-icons/rx';
 
 
 const style = {
@@ -335,6 +336,14 @@ const Home = () => {
                 <div className="profileinfo">
                     <div className="propic">
                         <img src={userData.photoURL} alt="" />
+                        <div className="layer">
+                            <div className="up"></div>
+                            <div className="down">
+                                <Button className='btn' variant="outlined" size="small">
+                                   <RxAvatar className='icon'/> Change Photo
+                                </Button>
+                            </div>
+                        </div>
                     </div>
                     <div className="info">
                         <div className="nameloc">
