@@ -35,6 +35,7 @@ const Posts = () => {
     let [friends, setFriends] = useState([]);
 
     let [editPost, setEditPost] = useState("")
+    const [currentUser, setCurrentUser] = useState([]);
 
     let handlePost = () => {
         if (postChange != "") {
@@ -104,6 +105,12 @@ const Posts = () => {
         });
     }
 
+    useEffect(() => {
+        onValue(ref(db, 'people/' + userData.uid), (snapshot) => {
+            setCurrentUser(snapshot.val())
+        });
+    }, [])
+
 
 
     let handlePostRemove = (item) => {
@@ -118,7 +125,7 @@ const Posts = () => {
                         id="outlined-multiline-flexible"
                         multiline
                         maxRows={4}
-                        sx={{ width: 640 }}
+                        sx={{ width: "79%" }}
                         placeholder="What’s on your mind?"
                         onChange={(e) => setPostChange(e.target.value)}
                         value={postChange}
@@ -211,8 +218,26 @@ const Posts = () => {
                 ))}
             </section>
 
+            <div className="myprofile">
+                <div className="myprofilecover">
+                    <img src="/cover.png" alt="" />
+                </div>
+                <div className="myprofileinfo">
+                    <div className="myprofileimg">
+                        <img src={userData.photoURL} alt="" />
+                    </div>
+                    <div className="info">
+                        <h2>{userData.displayName}</h2>
+                        <div className="details">
+                            {currentUser.info}
+                        </div>
+                    </div>
 
+                </div>
+            </div>
         </div>
+
+
     )
 }
 

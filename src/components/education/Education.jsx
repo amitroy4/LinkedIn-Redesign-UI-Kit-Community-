@@ -294,7 +294,7 @@ const Education = () => {
                             <div className="degree">
                                 {item.eduDegree}
                             </div>
-                            <div className="year">{item.eduInstitutionJoinDate} — {item.eduInstitutionEndDate ? eduInstitutionEndDate : "Now"}</div>
+                            <div className="year">{item.eduInstitutionJoinDate} — {item.eduInstitutionEndDate ? item.eduInstitutionEndDate : "Now"}</div>
                             <div className="courses">{item.eduDetails}</div>
                         </div>
                     </div>
