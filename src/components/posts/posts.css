@@ -1,3 +1,9 @@
+.scrollcontainer{
+    height: 100vh;
+    overflow-y: scroll;
+    padding-right: 30px;
+}
+
 .container .newpost {
     margin-top: 84px;
     padding: 25px 30px;
@@ -108,7 +114,7 @@
 .myprofile {
     position: absolute;
     top: 0;
-    right: -340px;
+    right: -300px;
     width: 290px;
     -webkit-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);
     -moz-box-shadow: 6px 4px 29px -6px rgba(0, 0, 0, 0.21);

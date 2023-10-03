@@ -118,81 +118,28 @@ const Posts = () => {
     }
     return (
         <div className="container">
-            <div className="newpost">
-                <div className="title">NEW POST</div>
-                <div className="textfield">
-                    <TextField
-                        id="outlined-multiline-flexible"
-                        multiline
-                        maxRows={4}
-                        sx={{ width: "79%" }}
-                        placeholder="What’s on your mind?"
-                        onChange={(e) => setPostChange(e.target.value)}
-                        value={postChange}
-                    />
-                    <BsImage className='icon' />
-                    <BsFillSendFill className='icon' onClick={handlePost} />
+            <div className="scrollcontainer">
+                <div className="newpost">
+                    <div className="title">NEW POST</div>
+                    <div className="textfield">
+                        <TextField
+                            id="outlined-multiline-flexible"
+                            multiline
+                            maxRows={4}
+                            sx={{ width: "79%" }}
+                            placeholder="What’s on your mind?"
+                            onChange={(e) => setPostChange(e.target.value)}
+                            value={postChange}
+                        />
+                        <BsImage className='icon' />
+                        <BsFillSendFill className='icon' onClick={handlePost} />
+                    </div>
                 </div>
-            </div>
 
-            <section className='allpost'>
-                {allPost.map((item) => (
-                    (userData.uid == item.whopost) ?
-                        <div className="post" key={item.id}>
-                            <div className="profile">
-                                <div className="left">
-                                    <div className="proimg">
-                                        <img src="/propic.jpeg" alt="" />
-                                    </div>
-                                    <div className="proinfo">
-                                        <div className="name">{item.whopostname}</div>
-                                        <div className="profession">Student</div>
-
-                                    </div>
-                                </div>
-                                {
-                                    userData.uid == item.whopost && <div className="right">
-                                        <div className="date">{item.date}</div>
-                                        <BiSolidEdit className='icon' onClick={() => handleopenEdit(item)} />
-                                        <Modal
-                                            open={openEdit}
-                                            onClose={handleCloseEdit}
-                                            aria-labelledby="modal-modal-title"
-                                            aria-describedby="modal-modal-description"
-                                        >
-                                            <Box sx={styleEdit}>
-                                                <Typography id="modal-modal-title" variant="h6" component="h2">
-                                                    Edit Post
-                                                </Typography>
-
-                                                <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                                    <TextField
-                                                        id="outlined-multiline-flexible"
-                                                        label="What's on your mind?"
-                                                        multiline
-                                                        maxRows={4}
-                                                        sx={{ width: 700 }}
-                                                        onChange={(e) => setEditPost(e.target.value)}
-                                                        value={editPost}
-                                                    />
-                                                </Typography>
-                                                <Button variant="contained" href="#contained-buttons" size="small" sx={{ mt: 2 }} onClick={() => handleEdit(item)}>
-                                                    Update
-                                                </Button>
-                                            </Box>
-                                        </Modal>
-
-                                        <MdDelete className='icon' onClick={() => handlePostRemove(item)} />
-                                    </div>
-                                }
-                            </div>
-                            <div className="text">{item.posts}</div>
-                            {/* <div className="postimg">s</div> */}
-                        </div>
-                        :
-                        friends.map((frnditem) => (
-                            (frnditem == item.whopost) &&
-                            <div className="post" key={frnditem.key}>
+                <section className='allpost'>
+                    {allPost.map((item) => (
+                        (userData.uid == item.whopost) ?
+                            <div className="post" key={item.id}>
                                 <div className="profile">
                                     <div className="left">
                                         <div className="proimg">
@@ -204,38 +151,94 @@ const Posts = () => {
 
                                         </div>
                                     </div>
-                                    <div className="right">
-                                        <div className="date">{item.date}</div>
-                                    </div>
+                                    {
+                                        userData.uid == item.whopost && <div className="right">
+                                            <div className="date">{item.date}</div>
+                                            <BiSolidEdit className='icon' onClick={() => handleopenEdit(item)} />
+                                            <Modal
+                                                open={openEdit}
+                                                onClose={handleCloseEdit}
+                                                aria-labelledby="modal-modal-title"
+                                                aria-describedby="modal-modal-description"
+                                            >
+                                                <Box sx={styleEdit}>
+                                                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                                                        Edit Post
+                                                    </Typography>
 
+                                                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                                        <TextField
+                                                            id="outlined-multiline-flexible"
+                                                            label="What's on your mind?"
+                                                            multiline
+                                                            maxRows={4}
+                                                            sx={{ width: 700 }}
+                                                            onChange={(e) => setEditPost(e.target.value)}
+                                                            value={editPost}
+                                                        />
+                                                    </Typography>
+                                                    <Button variant="contained" href="#contained-buttons" size="small" sx={{ mt: 2 }} onClick={() => handleEdit(item)}>
+                                                        Update
+                                                    </Button>
+                                                </Box>
+                                            </Modal>
+
+                                            <MdDelete className='icon' onClick={() => handlePostRemove(item)} />
+                                        </div>
+                                    }
                                 </div>
                                 <div className="text">{item.posts}</div>
                                 {/* <div className="postimg">s</div> */}
                             </div>
+                            :
+                            friends.map((frnditem) => (
+                                (frnditem == item.whopost) &&
+                                <div className="post" key={frnditem.key}>
+                                    <div className="profile">
+                                        <div className="left">
+                                            <div className="proimg">
+                                                <img src="/propic.jpeg" alt="" />
+                                            </div>
+                                            <div className="proinfo">
+                                                <div className="name">{item.whopostname}</div>
+                                                <div className="profession">Student</div>
 
-                        ))
+                                            </div>
+                                        </div>
+                                        <div className="right">
+                                            <div className="date">{item.date}</div>
+                                        </div>
 
-                ))}
-            </section>
+                                    </div>
+                                    <div className="text">{item.posts}</div>
+                                    {/* <div className="postimg">s</div> */}
+                                </div>
 
-            <div className="myprofile">
-                <div className="myprofilecover">
-                    <img src="/cover.png" alt="" />
-                </div>
-                <div className="myprofileinfo">
-                    <div className="myprofileimg">
-                        <img src={userData.photoURL} alt="" />
+                            ))
+
+                    ))}
+                </section>
+
+                <div className="myprofile">
+                    <div className="myprofilecover">
+                        <img src="/cover.png" alt="" />
                     </div>
-                    <div className="info">
-                        <h2>{userData.displayName}</h2>
-                        <div className="details">
-                            {currentUser.info}
+                    <div className="myprofileinfo">
+                        <div className="myprofileimg">
+                            <img src={userData.photoURL} alt="" />
                         </div>
-                    </div>
+                        <div className="info">
+                            <h2>{userData.displayName}</h2>
+                            <div className="details">
+                                {currentUser.info}
+                            </div>
+                        </div>
 
+                    </div>
                 </div>
             </div>
         </div>
+
 
 
     )
