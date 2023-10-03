@@ -26,6 +26,30 @@ import { MdDelete } from "react-icons/md";
 import { differenceInDays } from 'date-fns'
 import Education from '../../components/education/Education';
 import { RxAvatar } from 'react-icons/rx';
+import { AiOutlineCloudUpload } from 'react-icons/ai';
+import styled from '@emotion/styled';
+// Import the editor styles
+import '@pqina/pintura/pintura.css';
+
+// Import the editor default configuration
+import { getEditorDefaults } from '@pqina/pintura';
+
+// Import the editor component from `react-pintura`
+import { PinturaEditor } from '@pqina/react-pintura';
+
+
+
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 
 
 const style = {
@@ -81,6 +105,16 @@ const Home = () => {
     let [phonenumber, setphonenumber] = useState('');
     let [email, setemail] = useState('');
     let [about, setabout] = useState('');
+    let [dp, setDp] = useState('');
+    const editorConfig = getEditorDefaults();
+
+
+    const [openDp, setOpenDp] = useState(false);
+    const handleOpenDp = () => {
+        setDp(userData.photoURL);
+        setOpenDp(true)
+    };
+    const handleCloseDp = () => setOpenDp(false);
 
 
     const [isShowMore, setIsShowMore] = useState(true);
@@ -270,6 +304,27 @@ const Home = () => {
         });
     }, [])
 
+    console.log(dp);
+
+    const handleChangeDp = (e) => {
+        e.preventDefault();
+        let files;
+        if (e.dataTransfer) {
+            files = e.dataTransfer.files;
+        } else if (e.target) {
+            files = e.target.files;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+            setDp(reader.result);
+        };
+        reader.readAsDataURL(files[0]);
+    }
+
+    let changePrfilePicture = () => {
+        setOpenDp(false)
+    }
+
     return (
         <div className="container">
             <div className="profile">
@@ -339,9 +394,43 @@ const Home = () => {
                         <div className="layer">
                             <div className="up"></div>
                             <div className="down">
-                                <Button className='btn' variant="outlined" size="small">
-                                   <RxAvatar className='icon'/> Change Photo
+                                <Button className='btn' variant="outlined" size="small" onClick={handleOpenDp}>
+                                    <RxAvatar className='icon' /> Change Photo
                                 </Button>
+                                <Modal
+                                    open={openDp}
+                                    onClose={handleCloseDp}
+                                    aria-labelledby="modal-modal-title"
+                                    aria-describedby="modal-modal-description"
+                                >
+                                    <Box sx={style}>
+                                        <Typography id="modal-modal-title" variant="h6" component="h2">
+                                            Change Profile Picture
+                                        </Typography>
+                                        <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                            <Button component="label" variant="contained" size="small" startIcon={<AiOutlineCloudUpload />}>
+                                                Upload file
+                                                <VisuallyHiddenInput type="file" accept="image/png, image/gif, image/jpeg" onChange={handleChangeDp} />
+                                            </Button>
+                                            <div className="App" style={{ height: '300px' }}>
+                                                <PinturaEditor
+                                                    {...editorConfig}
+                                                    src={dp}
+                                                    imageCropAspectRatio={1}
+                                                    onProcess={(res) =>
+                                                        setDp(URL.createObjectURL(res.dest))
+                                                    }
+                                                ></PinturaEditor>
+                                            </div>
+                                            <div className="demo">
+                                                <img src={dp} alt="" style={{ height: '200px' }} />
+                                            </div>
+                                            <Button variant="contained" size="small" onClick={changePrfilePicture}>
+                                                Change Profile Picture
+                                            </Button>
+                                        </Typography>
+                                    </Box>
+                                </Modal>
                             </div>
                         </div>
                     </div>
