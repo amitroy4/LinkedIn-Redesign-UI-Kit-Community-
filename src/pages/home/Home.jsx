@@ -28,6 +28,7 @@ import Education from '../../components/education/Education';
 import { RxAvatar } from 'react-icons/rx';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
 import styled from '@emotion/styled';
+import { getStorage, ref as stringref, uploadString } from "firebase/storage";
 // Import the editor styles
 import '@pqina/pintura/pintura.css';
 
@@ -94,10 +95,12 @@ const styleContact = {
 
 const Home = () => {
     const db = getDatabase();
+    const storage = getStorage();
     let userData = useSelector((state) => state.loginUser.loginUser)
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
     const [currentUser, setCurrentUser] = useState([]);
+    const storageRef = stringref(storage, userData.uid);
     let [username, setusername] = useState('');
     let [address, setaddress] = useState('');
     let [dateofbirth, setdateofbirth] = useState('');
@@ -304,9 +307,10 @@ const Home = () => {
         });
     }, [])
 
-    console.log(dp);
+    // console.log(dp);
 
     const handleChangeDp = (e) => {
+        console.log(e);
         e.preventDefault();
         let files;
         if (e.dataTransfer) {
@@ -322,7 +326,30 @@ const Home = () => {
     }
 
     let changePrfilePicture = () => {
-        setOpenDp(false)
+
+        console.log("data type", dp);
+        uploadString(storageRef, dp, 'data_url').then((snapshot) => {
+            console.log('Uploaded a data_url string!');
+
+            getDownloadURL(snapshot.stringref).then((url) => {
+                console.log(url)
+                set(ref(db, 'people/' + userData.uid), {
+                    ...currentUser,
+                    profile_picture: url,
+                }).then((user) => {
+                    localStorage.setItem("LinkedInUser", JSON.stringify({
+                        ...userData,
+                        photoURL: url
+                    }))
+                    dispatch(userdata({
+                        ...userData,
+                        photoURL: url
+                    }))
+                }).then(() => {
+                    setOpenDp(false)
+                })
+            })
+        });
     }
 
     return (
