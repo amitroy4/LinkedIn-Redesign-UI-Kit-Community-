@@ -54,7 +54,13 @@ const Friendrequests = () => {
                         {friendRequest.map((item) => (
                             <li key={item.id}>
                                 <div className="left">
-                                    <img src="../avatar.svg" alt="" />
+                                    {
+                                        item.receiverid == userData.uid
+                                            ?
+                                            <img src={item.senderprofilepicture} alt="" />
+                                            :
+                                            <img src={item.receiverprofilepicture} alt="" />
+                                    }
                                     <div className="text">
                                         <h4>{item.sendername}</h4>
                                         <p>Love You.....</p>

@@ -71,6 +71,7 @@ const Rootlayout = () => {
     let handleLogOut = () => {
         signOut(auth).then(() => {
             localStorage.removeItem("LinkedInUser")
+            localStorage.removeItem("activeChat")
             dispatch(userdata(null))
             navigate("/login");
         });

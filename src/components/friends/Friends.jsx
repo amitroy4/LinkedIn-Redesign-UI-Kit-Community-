@@ -35,6 +35,7 @@ const Friends = () => {
                 blockreceiverid: item.receiverid,
                 blocksendername: item.sendername,
                 blocksenderid: item.senderid,
+                blockreceiverprofilepicture: item.receiverprofilepicture,
             }).then(() => {
                 remove(ref(db, "friends/" + item.id));
             })
@@ -44,6 +45,7 @@ const Friends = () => {
                 blockreceiverid: item.senderid,
                 blocksendername: item.receivername,
                 blocksenderid: item.receiverid,
+                blockreceiverprofilepicture: item.senderprofilepicture,
             }).then(() => {
                 remove(ref(db, "friends/" + item.id));
             })
@@ -89,7 +91,14 @@ const Friends = () => {
                         {friends.map((item) => (
                             <li key={item.id}>
                                 <div className="left">
-                                    <img src="../avatar.svg" alt="" />
+                                    {
+                                        item.receiverid == userData.uid
+                                            ?
+                                            <img src={item.senderprofilepicture} alt="" />
+                                            :
+                                            <img src={item.receiverprofilepicture} alt="" />
+                                    }
+
                                     <div className="text">
                                         {
                                             item.receiverid == userData.uid

@@ -50,6 +50,8 @@ const People = () => {
             senderid: userData.uid,
             receivername: item.username,
             receiverid: item.id,
+            senderprofilepicture: userData.photoURL,
+            receiverprofilepicture: item.profile_picture,
         });
     }
 

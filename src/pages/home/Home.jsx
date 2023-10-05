@@ -1,16 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import Grid from '@mui/material/Grid';
-import People from '../../components/people/People';
-import Friendrequests from '../../components/friendrequests/Friendrequests';
-import Friends from '../../components/friends/Friends';
-import Blocklist from '../../components/blocklist/Blocklist';
+import React, { useEffect, useState, useRef } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import Button from '@mui/material/Button';
 import './home.css'
 import { FiEdit } from 'react-icons/fi';
 import { FaLocationArrow } from 'react-icons/fa';
 import { BiLogoLinkedinSquare } from 'react-icons/bi';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
@@ -28,7 +23,11 @@ import Education from '../../components/education/Education';
 import { RxAvatar } from 'react-icons/rx';
 import { AiOutlineCloudUpload } from 'react-icons/ai';
 import styled from '@emotion/styled';
-import { getStorage, ref as stringref, uploadString } from "firebase/storage";
+import { getStorage, ref as stringref, uploadString, getDownloadURL } from "firebase/storage";
+import { userdata } from '../../features/userSlice';
+import { getAuth, updateProfile } from "firebase/auth";
+
+
 // Import the editor styles
 import '@pqina/pintura/pintura.css';
 
@@ -96,10 +95,12 @@ const styleContact = {
 const Home = () => {
     const db = getDatabase();
     const storage = getStorage();
+    const auth = getAuth();
     let userData = useSelector((state) => state.loginUser.loginUser)
+    let dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
-    const [currentUser, setCurrentUser] = useState([]);
+    const [currentloginUser, setcurrentloginUser] = useState([]);
     const storageRef = stringref(storage, userData.uid);
     let [username, setusername] = useState('');
     let [address, setaddress] = useState('');
@@ -110,7 +111,7 @@ const Home = () => {
     let [about, setabout] = useState('');
     let [dp, setDp] = useState('');
     const editorConfig = getEditorDefaults();
-
+    const [dataUrl, setDataUrl] = useState('');
 
     const [openDp, setOpenDp] = useState(false);
     const handleOpenDp = () => {
@@ -177,13 +178,13 @@ const Home = () => {
     };
 
     const handleOpen = () => {
-        setusername(currentUser.username);
-        setaddress(currentUser.address);
-        setdateofbirth(currentUser.dateofbirth);
-        setinfo(currentUser.info);
-        setphonenumber(currentUser.phonenumber);
-        setemail(currentUser.email);
-        setabout(currentUser.about);
+        setusername(currentloginUser.username);
+        setaddress(currentloginUser.address);
+        setdateofbirth(currentloginUser.dateofbirth);
+        setinfo(currentloginUser.info);
+        setphonenumber(currentloginUser.phonenumber);
+        setemail(currentloginUser.email);
+        setabout(currentloginUser.about);
         setOpen(true)
     };
 
@@ -191,7 +192,7 @@ const Home = () => {
 
     let handleeditbuttonsave = () => {
         set(ref(db, 'people/' + userData.uid), {
-            ...currentUser,
+            ...currentloginUser,
             username: username,
             email: email,
             dateofbirth: dateofbirth,
@@ -213,7 +214,7 @@ const Home = () => {
 
     useEffect(() => {
         onValue(ref(db, 'people/' + userData.uid), (snapshot) => {
-            setCurrentUser(snapshot.val())
+            setcurrentloginUser(snapshot.val())
         });
     }, [])
 
@@ -310,7 +311,6 @@ const Home = () => {
     // console.log(dp);
 
     const handleChangeDp = (e) => {
-        console.log(e);
         e.preventDefault();
         let files;
         if (e.dataTransfer) {
@@ -325,25 +325,57 @@ const Home = () => {
         reader.readAsDataURL(files[0]);
     }
 
-    let changePrfilePicture = () => {
 
-        console.log("data type", dp);
-        uploadString(storageRef, dp, 'data_url').then((snapshot) => {
+
+
+    // Function to fetch and convert blob data to a Data URL
+    async function fetchAndConvertBlobToDataUrl(blobURL) {
+        try {
+            // Fetch the blob data
+            const response = await fetch(blobURL);
+            const blobData = await response.blob();
+
+            // Convert blob to Data URL
+            const reader = new FileReader();
+            reader.readAsDataURL(blobData);
+
+            reader.onloadend = () => {
+                if (reader.result) {
+                    // Set the Data URL in the state
+                    setDataUrl(reader.result);
+                    console.log(dataUrl);
+                } else {
+                    console.error('Error converting blob to Data URL');
+                }
+            };
+        } catch (error) {
+            console.error('Error:', error);
+        }
+
+    }
+
+    let changePrfilePicture = () => {
+        fetchAndConvertBlobToDataUrl(dp);
+
+        uploadString(storageRef, dataUrl, 'data_url').then((snapshot) => {
             console.log('Uploaded a data_url string!');
 
-            getDownloadURL(snapshot.stringref).then((url) => {
+            getDownloadURL(snapshot.ref).then((url) => {
                 console.log(url)
                 set(ref(db, 'people/' + userData.uid), {
-                    ...currentUser,
+                    ...currentloginUser,
                     profile_picture: url,
                 }).then((user) => {
                     localStorage.setItem("LinkedInUser", JSON.stringify({
                         ...userData,
-                        photoURL: url
+                        photoURL: url,
                     }))
+                    updateProfile(auth.currentUser, {
+                        photoURL: url,
+                    })
                     dispatch(userdata({
                         ...userData,
-                        photoURL: url
+                        photoURL: url,
                     }))
                 }).then(() => {
                     setOpenDp(false)
@@ -447,6 +479,7 @@ const Home = () => {
                                                     onProcess={(res) =>
                                                         setDp(URL.createObjectURL(res.dest))
                                                     }
+                                                // onLoad={handleEvent}
                                                 ></PinturaEditor>
                                             </div>
                                             <div className="demo">
@@ -464,10 +497,10 @@ const Home = () => {
                     <div className="info">
                         <div className="nameloc">
                             <h2>{userData.displayName}<BiLogoLinkedinSquare className='nameicon' /></h2>
-                            <div className="loc"> <FaLocationArrow className='locicon' /> <span className='locedit'>{currentUser.address}</span></div>
+                            <div className="loc"> <FaLocationArrow className='locicon' /> <span className='locedit'>{currentloginUser.address}</span></div>
                         </div>
                         <div className="details">
-                            {currentUser.info}
+                            {currentloginUser.info}
                         </div>
                         <Button size="small" variant="contained" onClick={handleopenContact}>
                             Contact info
@@ -483,11 +516,11 @@ const Home = () => {
                                     Contact info
                                 </Typography>
                                 <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                                    Name: {currentUser.username} <br />
-                                    Date of birth: {currentUser.dateofbirth} <br />
-                                    Phone number: {currentUser.phonenumber} <br />
-                                    Email: {currentUser.email} <br />
-                                    Address: {currentUser.address}
+                                    Name: {currentloginUser.username} <br />
+                                    Date of birth: {currentloginUser.dateofbirth} <br />
+                                    Phone number: {currentloginUser.phonenumber} <br />
+                                    Email: {currentloginUser.email} <br />
+                                    Address: {currentloginUser.address}
 
                                 </Typography>
                             </Box>
@@ -503,10 +536,10 @@ const Home = () => {
             <div className="about">
                 <h4>About</h4>
                 {
-                    currentUser.about &&
+                    currentloginUser.about &&
                     <>
-                        <p>{isShowMore ? currentUser.about.slice(0, 300)
-                            : currentUser.about}</p>
+                        <p>{isShowMore ? currentloginUser.about.slice(0, 300)
+                            : currentloginUser.about}</p>
                         <Button size="small" onClick={toggleReadMoreLess}>
                             {isShowMore ? "SEE MORE" : "SEE LESS"}
                         </Button>

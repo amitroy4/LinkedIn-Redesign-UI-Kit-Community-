@@ -46,7 +46,7 @@ const Blocklist = () => {
                         {blocklist.map((item) => (
                             <li key={item.id}>
                                 <div className="left">
-                                    <img src="../avatar.svg" alt="" />
+                                    <img src={item.blockreceiverprofilepicture} alt="" />
                                     <div className="text">
                                         <h4>{item.blockreceivername}</h4>
                                         <p>Love You.....</p>
