@@ -14,6 +14,8 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import moment from 'moment';
+import { RiDeleteBin6Line } from "react-icons/ri";
+import { getStorage, ref as fireRef, uploadString, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 
 const styleEdit = {
@@ -26,27 +28,71 @@ const styleEdit = {
     p: 4,
 };
 
-
 const Posts = () => {
     const db = getDatabase();
+    const storage = getStorage();
     let userData = useSelector((state) => state.loginUser.loginUser)
     let [postChange, setPostChange] = useState('')
     let [allPost, setAllPost] = useState([])
     let [friends, setFriends] = useState([]);
 
     let [editPost, setEditPost] = useState("")
+    let [postImage, setPostImage] = useState("")
     const [currentUser, setCurrentUser] = useState([]);
 
     let handlePost = () => {
-        if (postChange != "") {
+        if (postChange != "" && postImage != "") {
+            uploadString(fireRef(storage, 'postimages/' + 'userid:' + userData.uid + ' ' + moment().format('MMMM Do YYYY, h:mm:ss a')), postImage, 'data_url').then((snapshot) => {
+                // console.log('Uploaded a data_url string!');
+                getDownloadURL(snapshot.ref).then((downloadURL) => {
+                    // console.log('File available at', downloadURL);
+                    set(push(ref(db, 'posts/')), {
+                        whopost: userData.uid,
+                        whopostimg: userData.photoURL,
+                        whopostname: userData.displayName,
+                        posts: postChange,
+                        picture: downloadURL,
+                        date: "Posted on " + moment().format('lll'),
+                    }).then(() => {
+                        setPostImage("")
+                        setPostChange("")
+                    });
+                });
+            });
+
+        }
+        else if (postChange != "") {
             set(push(ref(db, 'posts/')), {
                 whopost: userData.uid,
+                whopostimg: userData.photoURL,
                 whopostname: userData.displayName,
                 posts: postChange,
+                picture: "",
                 date: "Posted on " + moment().format('lll'),
             }).then(() => {
+                setPostImage("")
                 setPostChange("")
             });
+
+        } else if (postImage != "") {
+            uploadString(fireRef(storage, 'postimages/' + 'userid:' + userData.uid + ' ' + moment().format('MMMM Do YYYY, h:mm:ss a')), postImage, 'data_url').then((snapshot) => {
+                // console.log('Uploaded a data_url string!');
+                getDownloadURL(snapshot.ref).then((downloadURL) => {
+                    // console.log('File available at', downloadURL);
+                    set(push(ref(db, 'posts/')), {
+                        whopost: userData.uid,
+                        whopostimg: userData.photoURL,
+                        whopostname: userData.displayName,
+                        posts: postChange,
+                        picture: downloadURL,
+                        date: "Posted on " + moment().format('lll'),
+                    }).then(() => {
+                        setPostImage("")
+                        setPostChange("")
+                    });
+                });
+            });
+
         }
 
     }
@@ -116,6 +162,28 @@ const Posts = () => {
     let handlePostRemove = (item) => {
         remove(ref(db, 'posts/' + item.id));
     }
+    let deletepostimg = (item) => {
+        setPostImage("")
+    }
+
+
+    const onPostPicChange = (e) => {
+
+        setPostImage(URL.createObjectURL(event.target.files[0]));
+        e.preventDefault();
+        let files;
+        if (e.dataTransfer) {
+            files = e.dataTransfer.files;
+        } else if (e.target) {
+            files = e.target.files;
+        }
+        const reader = new FileReader();
+        reader.onload = () => {
+            setPostImage(reader.result);
+        };
+        reader.readAsDataURL(files[0]);
+    };
+
     return (
         <div className="container">
             <div className="scrollcontainer">
@@ -131,9 +199,22 @@ const Posts = () => {
                             onChange={(e) => setPostChange(e.target.value)}
                             value={postChange}
                         />
-                        <BsImage className='icon' />
+                        <label htmlFor="postimginput">
+                            <BsImage className='icon' />
+                        </label>
+                        <input type="file" accept="image/png, image/gif, image/jpeg" id='postimginput' onChange={onPostPicChange} />
                         <BsFillSendFill className='icon' onClick={handlePost} />
                     </div>
+                    {postImage &&
+                        <div className="showimgbox">
+                            <img src={postImage} className='showimg'></img>
+                            <div className="showoffbtn">
+                                <Button variant="outlined" className='showicon' startIcon={<RiDeleteBin6Line />} onClick={deletepostimg}>
+                                    Delete
+                                </Button>
+                            </div>
+                        </div>
+                    }
                 </div>
 
                 <section className='allpost'>
@@ -143,7 +224,7 @@ const Posts = () => {
                                 <div className="profile">
                                     <div className="left">
                                         <div className="proimg">
-                                            <img src="/propic.jpeg" alt="" />
+                                            <img src={item.whopostimg} alt="" />
                                         </div>
                                         <div className="proinfo">
                                             <div className="name">{item.whopostname}</div>
@@ -188,7 +269,9 @@ const Posts = () => {
                                     }
                                 </div>
                                 <div className="text">{item.posts}</div>
-                                {/* <div className="postimg">s</div> */}
+                                <div className="postimg">
+                                    <img src={item.picture} alt="" />
+                                </div>
                             </div>
                             :
                             friends.map((frnditem) => (
@@ -197,7 +280,7 @@ const Posts = () => {
                                     <div className="profile">
                                         <div className="left">
                                             <div className="proimg">
-                                                <img src="/propic.jpeg" alt="" />
+                                                <img src={item.whopostimg} alt="" />
                                             </div>
                                             <div className="proinfo">
                                                 <div className="name">{item.whopostname}</div>
@@ -211,7 +294,9 @@ const Posts = () => {
 
                                     </div>
                                     <div className="text">{item.posts}</div>
-                                    {/* <div className="postimg">s</div> */}
+                                    <div className="postimg">
+                                        <img src={item.picture} alt="" />
+                                    </div>
                                 </div>
 
                             ))

@@ -23,6 +23,10 @@
     margin-top: 20px;
 }
 
+.container .newpost .textfield #postimginput {
+    display: none;
+}
+
 .container .newpost .icon {
     color: #cbcbcb;
     font-size: 25px;
@@ -42,6 +46,20 @@
 
 .container .newpost .css-1jmcroa-MuiFormControl-root-MuiTextField-root {
     border: none !important;
+}
+
+.container .newpost .showimg {
+    margin-top: 20px;
+    width: 200px;
+}
+
+.container .newpost .showimgbox {
+    width: 100%;
+    text-align: center;
+}
+
+.container .newpost .showimgbox .showicon {
+    background: #d7d7d787;
 }
 
 .container .allpost .post {
@@ -105,6 +123,18 @@
 .container .allpost .post .profile .right .date {
     margin-right: 20px;
     font-size: 10px;
+}
+
+
+.container .allpost .post .postimg{
+    margin-top: 20px;
+    width: 100%;
+    text-align: center;
+}
+
+.container .allpost .post .postimg img{
+    width: 40%;
+
 }
 
 .container {

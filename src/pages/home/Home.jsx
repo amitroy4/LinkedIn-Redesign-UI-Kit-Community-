@@ -101,7 +101,7 @@ const Home = () => {
     const [open, setOpen] = useState(false);
     const handleClose = () => setOpen(false);
     const [currentloginUser, setcurrentloginUser] = useState([]);
-    const storageRef = stringref(storage, userData.uid);
+    const storageRef = stringref(storage, "profilepictures/" + userData.uid);
     let [username, setusername] = useState('');
     let [address, setaddress] = useState('');
     let [dateofbirth, setdateofbirth] = useState('');
