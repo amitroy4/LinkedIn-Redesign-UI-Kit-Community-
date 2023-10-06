@@ -38,7 +38,10 @@ const Posts = () => {
 
     let [editPost, setEditPost] = useState("")
     let [postImage, setPostImage] = useState("")
+    let [newPostImage, setNewPostImage] = useState("")
     const [currentUser, setCurrentUser] = useState([]);
+    const [updatePost, setUpdatePost] = useState([]);
+    const [controlimg, setcontrolimg] = useState(true);
 
     let handlePost = () => {
         if (postChange != "" && postImage != "") {
@@ -131,24 +134,60 @@ const Posts = () => {
 
     const [openEdit, setopenEdit] = useState(false);
     const handleopenEdit = (item) => {
+        setUpdatePost(item)
+        console.log("button", item);
+        setNewPostImage(item.picture)
+        setcontrolimg(false);
+        setPostImage(item.picture);
         setEditPost(item.posts);
         setopenEdit(true)
     };
     const handleCloseEdit = () => {
+        // 
+        setcontrolimg(true);
         setEditPost("");
+        setPostImage('');
         setopenEdit(false)
     };
 
+    // console.log('check', controlimg);
+
     let handleEdit = (item) => {
-        set(ref(db, 'posts/' + item.id), {
-            whopost: userData.uid,
-            whopostname: userData.displayName,
-            posts: editPost,
-            date: "Updated on " + moment().format('lll'),
-        }).then(() => {
-            setEditPost("");
-            setopenEdit(false)
-        });
+        if (editPost != "" && postImage != newPostImage) {
+            console.log("true");
+            uploadString(fireRef(storage, 'postimages/' + 'userid:' + userData.uid + ' ' + moment().format('MMMM Do YYYY, h:mm:ss a')), postImage, 'data_url').then((snapshot) => {
+                // console.log('Uploaded a data_url string!');
+                getDownloadURL(snapshot.ref).then((downloadURL) => {
+                    // console.log('File available at', downloadURL);
+                    set(ref(db, 'posts/' + item.id), {
+                        ...item,
+                        posts: editPost,
+                        picture: downloadURL,
+                        date: "Updated on " + moment().format('lll'),
+                    }).then(() => {
+                        setEditPost("");
+                        setPostImage("")
+                        setopenEdit(false)
+                        setcontrolimg(true);
+                    });
+                });
+            });
+
+        } else if (editPost != "" && postImage == newPostImage) {
+
+            set(ref(db, 'posts/' + item.id), {
+                ...item,
+                posts: editPost,
+                date: "Updated on " + moment().format('lll'),
+            }).then(() => {
+                setEditPost("");
+                setPostImage("")
+                setopenEdit(false)
+                setcontrolimg(true);
+            });
+
+        }
+
     }
 
     useEffect(() => {
@@ -162,14 +201,14 @@ const Posts = () => {
     let handlePostRemove = (item) => {
         remove(ref(db, 'posts/' + item.id));
     }
+
     let deletepostimg = (item) => {
         setPostImage("")
     }
 
 
     const onPostPicChange = (e) => {
-
-        setPostImage(URL.createObjectURL(event.target.files[0]));
+        setPostImage(URL.createObjectURL(e.target.files[0]));
         e.preventDefault();
         let files;
         if (e.dataTransfer) {
@@ -205,7 +244,7 @@ const Posts = () => {
                         <input type="file" accept="image/png, image/gif, image/jpeg" id='postimginput' onChange={onPostPicChange} />
                         <BsFillSendFill className='icon' onClick={handlePost} />
                     </div>
-                    {postImage &&
+                    {(postImage && controlimg) &&
                         <div className="showimgbox">
                             <img src={postImage} className='showimg'></img>
                             <div className="showoffbtn">
@@ -258,9 +297,22 @@ const Posts = () => {
                                                             value={editPost}
                                                         />
                                                     </Typography>
-                                                    <Button variant="contained" href="#contained-buttons" size="small" sx={{ mt: 2 }} onClick={() => handleEdit(item)}>
-                                                        Update
-                                                    </Button>
+
+                                                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                                        <input type="file" accept="image/png, image/gif, image/jpeg" id='postimginput' onChange={onPostPicChange} />
+                                                    </Typography>
+
+                                                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                                        <div className="postimg">
+                                                            <img src={postImage} alt="" width="300" />
+                                                        </div>
+                                                    </Typography>
+                                                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                                                        <Button variant="contained" href="#contained-buttons" size="small" sx={{ mt: 2 }} onClick={() => handleEdit(updatePost)}>
+                                                            Update
+                                                        </Button>
+                                                    </Typography>
+
                                                 </Box>
                                             </Modal>
 
